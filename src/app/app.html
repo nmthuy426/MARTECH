@@ -1,0 +1,8 @@
+<nav class="view-switcher" aria-label="Chuyển giao diện">
+  <span class="switcher-brand">THE TOYS WE REMEMBER</span>
+  <div class="view-links">
+    <a [routerLink]="campaignPath()" [class.selected]="!isDemo()" [attr.aria-current]="!isDemo() ? 'page' : null">Campaign</a>
+    <a routerLink="/admin" [class.selected]="isDemo()" [attr.aria-current]="isDemo() ? 'page' : null">Demo</a>
+  </div>
+</nav>
+<div class="experience-view"><router-outlet /></div>
