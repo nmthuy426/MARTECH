@@ -1,3 +1,4 @@
+import { CampaignAdminStore } from '../../services/campaign-admin-store';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +31,7 @@ export class Page3Create implements OnInit {
 
   constructor(
     private router: Router,
+    private adminStore: CampaignAdminStore,
     private marTechService: MarTechService
   ) {}
 
@@ -156,14 +158,14 @@ onSubmit(): void {
       };
 
       sessionStorage.setItem('memory_card_data', JSON.stringify(cardData));
+      const storedStory = this.adminStore.captureStory(cardData, this.galleryConsent);
+      const storyMeta = {story_id:storedStory?.id,card_id:storedStory?.cardId};
+      this.marTechService.trackEvent('story_submit_success', { ...storyMeta, theme_id: this.selectedTheme, story_length: this.storyText.length });
+      this.marTechService.trackEvent('memory_card_create_success', { ...storyMeta, theme_id: this.selectedTheme });
       if (this.galleryConsent) {
-        this.marTechService.trackEvent('ugc_usage_consent_granted');
-        this.marTechService.trackEvent('ugc_submission');
+        this.marTechService.trackEvent('ugc_usage_consent_granted', storyMeta);
+        this.marTechService.trackEvent('ugc_submission', storyMeta);
       }
-
-      // Bắn event MarTech chuẩn Docs (Giai đoạn 3.3)
-      this.marTechService.trackEvent('story_submit_success', { theme_id: this.selectedTheme });
-      this.marTechService.trackEvent('memory_card_create_success', { theme_id: this.selectedTheme });
 
       setTimeout(() => {
         this.isProcessing = false;

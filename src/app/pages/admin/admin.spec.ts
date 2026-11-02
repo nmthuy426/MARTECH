@@ -7,7 +7,8 @@ import { ConsentPrompt } from '../../components/consent-prompt/consent-prompt';
 
 describe('Admin connected to customer events',()=>{
  beforeEach(()=>{
-  localStorage.clear();sessionStorage.clear();
+  localStorage.clear();sessionStorage.clear();localStorage.setItem('ttwr.admin.source','live');
+  vi.spyOn(window,'scrollTo').mockImplementation(()=>{});
   TestBed.configureTestingModule({imports:[Admin,ConsentPrompt],providers:[provideRouter([])]});
  });
  it('updates the rendered dashboard when the customer records an action',()=>{

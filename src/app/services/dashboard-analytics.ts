@@ -64,7 +64,13 @@ export function analyze(events: TrackedEvent[], history = events) {
     lead,mql,sql, customers: new Set([...qualifiedBuyers,...outsideBuyers]).size,
     qualifiedCustomers: qualifiedBuyers.size, outsideCustomers: outsideLeadBuyers.size,
     sqlRate: ratio(qualifiedBuyers.size,sql), consentRows, revenue, orders: orders.size,
-    channels: groupBy('utm_source','landing_page_view'), themes: groupBy('theme_id','memory_theme_select'),
+    channels: (()=>{
+      const first=new Map<string,TrackedEvent>();
+      for(const e of [...history].sort((a,b)=>a.timestamp.localeCompare(b.timestamp)))if(e.event_name==='landing_page_view'&&!first.has(e.visitor_id))first.set(e.visitor_id,e);
+      const counts=new Map<string,number>();
+      for(const [id,e] of first)if(visiblePeople.has(id))counts.set(e.utm_source,(counts.get(e.utm_source)||0)+1);
+      return [...counts].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value);
+    })(), themes: groupBy('theme_id','memory_theme_select'),
     delivered: count('followup_delivered'), followupCtr: ratio(count('followup_click'),count('followup_delivered')),
     cardRate: ratio(unique(['memory_card_create_success']),unique(['story_submit_success'])),
   };

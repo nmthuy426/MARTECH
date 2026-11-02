@@ -8,3 +8,6 @@
 .view-links a:focus-visible{outline:2px solid #00e676;outline-offset:3px}
 .experience-view{padding-top:52px}
 @media(max-width:540px){.view-switcher{padding:0 14px}.switcher-brand{font-size:8px;letter-spacing:.5px;max-width:130px}.view-links a{min-width:78px;padding:7px 9px;font-size:10px}}
+
+.switcher-brand{display:flex;align-items:center;gap:10px}.switcher-brand img{width:30px;height:30px;object-fit:contain;border:1px solid #fffdf0;flex-shrink:0}
+@media(max-width:540px){.switcher-brand{max-width:160px;gap:7px}.switcher-brand img{width:27px;height:27px}}

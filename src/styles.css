@@ -10,3 +10,25 @@
 .experience-view .admin-shell .sidebar{top:52px}
 .experience-view .admin-shell{min-height:calc(100vh - 52px)}
 .experience-view .admin-shell [id]{scroll-margin-top:68px}
+
+/* Transparent wordmark sits directly on the campaign background. */
+.campaign-brand{display:inline-flex;align-items:center;gap:14px;flex-shrink:0;color:#111;text-decoration:none}
+.campaign-brand-logo{display:block;width:180px;height:60px;flex-shrink:0}
+.campaign-brand-logo img{display:block;width:100%;height:100%;object-fit:contain}
+.campaign-brand-caption{font:700 10px/1.4 'Space Grotesk',Arial,sans-serif;letter-spacing:1px;border-left:2px solid #111;padding-left:12px}
+.admin-shell .admin-brand-icon{width:44px;height:44px;object-fit:contain;background:#fff;border:2px solid #111;box-shadow:3px 3px 0 #111;flex-shrink:0}
+@media(max-width:640px){.campaign-brand-logo{width:130px;height:50px}.campaign-brand-caption{display:none}}
+
+/* Eight-section Admin navigation remains usable on smaller screens. */
+.admin-shell .sidebar nav{min-height:0;overflow-y:auto;margin:0 -3px;padding:0 3px 7px}
+.admin-shell .sidebar nav a{font-size:10px;line-height:1.5;margin:5px 0;padding:10px 7px}
+.admin-shell .sidebar .workspace{margin:24px 0 15px}
+.admin-shell .sidebar-bottom{flex-shrink:0}
+@media(max-width:850px){.admin-shell .sidebar nav{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:9px;margin-top:15px;padding-bottom:9px}.admin-shell .sidebar nav a{flex-shrink:0;white-space:nowrap;margin:0;padding:7px 9px}}
+
+.admin-shell .source-picker{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 24px}
+.admin-shell .source-picker button{background:#fffdf0;border:2px solid #111;padding:10px 14px;box-shadow:3px 3px #111;font:700 11px 'Space Grotesk',Arial,sans-serif;cursor:pointer}
+.admin-shell .source-picker .selected{background:#ffd600}
+.admin-shell .finance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.admin-shell .finance-grid span{display:block;font-size:11px}.admin-shell .finance-grid strong{display:block;font-size:23px;margin-top:8px;color:#2563eb}
+@media(max-width:650px){.admin-shell .finance-grid{grid-template-columns:repeat(2,1fr)}.admin-shell .finance-grid strong{font-size:18px}}

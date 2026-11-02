@@ -1,0 +1,37 @@
+import {Component,computed,effect,inject,input,signal} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {FamilyCrm,Child,Draft,Consultation} from '../../../services/family-crm';
+@Component({selector:'app-family-crm',imports:[FormsModule,CommonModule],templateUrl:'./family.html',styleUrl:'./family.css'})
+export class FamilyPanel {
+ readonly view=input('families');readonly crm=inject(FamilyCrm);readonly query=signal('');readonly selection=signal('');readonly page=signal(0);readonly message=signal('');readonly childDraft=signal<Child|null>(null);readonly draft=signal<Draft|null>(null);
+ familyVisitor='';familyName='';question='';consultChild='';consultOwner='';consultNote='';
+ constructor(){const route=inject(ActivatedRoute);effect(()=>{this.crm.source.mode();this.selection.set(route.snapshot.queryParamMap.get('family')?'F'+route.snapshot.queryParamMap.get('family'):'');this.childDraft.set(null);this.draft.set(null);this.message.set('');});route.queryParamMap.subscribe(p=>{if(p.get('family'))this.selection.set('F'+p.get('family'));});}
+ readonly families=computed(()=>this.crm.data().families.filter(f=>(f.name+' '+f.visitorId+' '+this.crm.data().children.filter(c=>c.familyId===f.id).map(c=>c.nickname).join(' ')).toLowerCase().includes(this.query().toLowerCase())));
+ readonly selected=computed(()=>this.crm.data().families.find(f=>f.id===this.selection()));
+ readonly children=computed(()=>this.crm.data().children.filter(c=>c.familyId===this.selection()));
+ readonly consultations=computed(()=>this.crm.data().consultations.filter(c=>(!this.selection()||c.familyId===this.selection())&&(c.question+' '+c.note+' '+c.owner).toLowerCase().includes(this.query().toLowerCase())));
+ readonly allConsultations=computed(()=>this.crm.data().consultations.filter(c=>(c.question+' '+this.family(c.familyId)+' '+c.owner).toLowerCase().includes(this.query().toLowerCase())));
+ openConsult(c:Consultation){this.selection.set(c.familyId);this.consultChild=c.childId;this.consultOwner=c.owner;}
+ readonly tasks=computed(()=>this.crm.tasks().filter(t=>(t.reason+' '+this.family(t.familyId)).toLowerCase().includes(this.query().toLowerCase())));
+ readonly orders=computed(()=>this.crm.orders().filter(o=>(o.id+' '+o.visitorId).toLowerCase().includes(this.query().toLowerCase())));
+ readonly visitors=computed(()=>[...new Set(this.crm.source.events().map(e=>e.visitor_id))]);
+ recommendations(){const c=this.crm.data().children.find(c=>c.id===this.consultChild);return c?(this.crm.source.mode()==='mock'?this.crm.source.dataset()?.products as {product_id:string;name:string;theme_id:string;price:number}[]||[]:[]).filter(p=>p.theme_id===c.theme&&p.price<=c.budget).slice(0,3):[];}
+ family(id:string){return this.crm.data().families.find(f=>f.id===id)?.name||id;}
+ child(id:string){return this.crm.data().children.find(c=>c.id===id)?.nickname||'Chưa gắn bé';}
+ theme(id:string){return this.crm.admin.settings().themes.find(t=>t.id===id)?.name||id;}
+ done(ok:boolean,text:string){this.message.set(ok?text:this.crm.error());}
+ addFamily(){if(!this.familyVisitor||!this.familyName.trim())return;const id='F'+this.familyVisitor;if(this.crm.data().families.some(f=>f.id===id)){this.selection.set(id);this.message.set('Khách đã có hồ sơ gia đình.');return;}this.done(this.crm.update(d=>d.families.push({id,visitorId:this.familyVisitor,name:this.familyName.trim(),owner:''})),'Đã tạo hồ sơ gia đình.');this.selection.set(id);}
+ editChild(c?:Child){this.childDraft.set(c?structuredClone(c):{id:crypto.randomUUID(),familyId:this.selection(),nickname:'',birthday:'',ageBand:'3–5 tuổi',theme:'gach_lego',budget:500000,birthdayOptIn:false});}
+ saveChild(){const c=this.childDraft();if(!c?.nickname.trim()||!c.familyId||!Number.isFinite(c.budget)||c.budget<0){this.message.set('Điền biệt danh và ngân sách hợp lệ.');return;}if(c.birthday&&(c.birthday>new Date(this.crm.source.nowTimestamp()).toISOString().slice(0,10)||c.birthday<'2008-01-01')){this.message.set('Ngày sinh cần nằm trong khoảng từ 2008 đến ngày báo cáo.');return;}if(c.birthdayOptIn&&!c.birthday){this.message.set('Cần ngày sinh nếu chọn nhận nhắc sinh nhật.');return;}if(c.birthday){const today=new Date(this.crm.source.nowTimestamp()+7*3600000).toISOString().slice(0,10);const age=Number(today.slice(0,4))-Number(c.birthday.slice(0,4))-(today.slice(5)<c.birthday.slice(5)?1:0);c.ageBand=age<3?'0–2 tuổi':age<6?'3–5 tuổi':age<9?'6–8 tuổi':age<13?'9–12 tuổi':'13+ tuổi';}this.done(this.crm.update(d=>{const i=d.children.findIndex(x=>x.id===c.id);if(i<0)d.children.push(structuredClone(c));else d.children[i]=structuredClone(c);}), 'Đã lưu hồ sơ bé.');this.childDraft.set(null);}
+ saveConsult(){if(!this.selection()||!this.question.trim()||!this.children().some(c=>c.id===this.consultChild)){this.message.set('Chọn gia đình, bé và nhập câu hỏi.');return;}this.done(this.crm.update(d=>d.consultations.push({id:crypto.randomUUID(),familyId:this.selection(),childId:this.consultChild,question:this.question.trim(),status:'pending',owner:this.consultOwner,createdAt:new Date(this.crm.source.nowTimestamp()).toISOString(),note:this.consultNote})),'Đã ghi nhận tư vấn.');this.question='';this.consultNote='';}
+ resolve(c:Consultation){this.done(this.crm.update(d=>{const item=d.consultations.find(x=>x.id===c.id)!;item.status=item.status==='resolved'?'pending':'resolved';}), 'Đã cập nhật tư vấn.');}
+ taskUpdate(id:string,field:'owner'|'status',value:string){this.done(this.crm.update(d=>{d.tasks??={};d.tasks[id]={...(d.tasks[id]||{owner:'',status:'pending'}),[field]:value};}), 'Đã cập nhật công việc.');}
+ editDraft(d:Draft){this.draft.set({...structuredClone(d),status:'draft'});}
+ consentLabel(id:string){const f=this.crm.data().families.find(f=>f.id===id);return f&&this.crm.admin.consentFor(f.visitorId).granted?'Đã đồng ý':'Chưa đồng ý / đã hủy';}
+ saveDraft(){const draft=this.draft();if(!draft?.body.trim())return;this.done(this.crm.update(d=>{d.drafts=[structuredClone(draft),...(d.drafts||[]).filter(x=>x.id!==draft.id)];}), 'Đã lưu bản nháp.');this.draft.set(null);}
+ approve(draft:Draft){this.done(this.crm.update(d=>{const item=d.drafts!.find(d=>d.id===draft.id)!;item.status='approved';}),'Đã duyệt bản nháp.');}
+ rule(id:string,on:boolean){this.done(this.crm.update(d=>{d.rules={...d.rules,[id]:on};}),'Đã lưu kịch bản chăm sóc.');}
+ readonly rules=[{id:'birthday',name:'Trước sinh nhật tối đa 14 ngày'},{id:'age',name:'Chuyển nhóm tuổi 3 / 6 / 9 / 13'},{id:'postpurchase',name:'Hướng dẫn chơi trong 14 ngày sau mua'},{id:'return',name:'90 ngày chưa có giao dịch mới'},{id:'consult',name:'Tư vấn chưa giải quyết'}];
+}

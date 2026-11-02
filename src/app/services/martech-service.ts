@@ -88,6 +88,17 @@ export class MarTechService {
     return event;
   }
 
+  withdrawConsent(visitorId:string):boolean {
+    const subject=[...this.events()].reverse().find(e=>e.visitor_id===visitorId&&e.event_name==='marketing_consent_granted');
+    if (!subject) return false;
+    const event:TrackedEvent={...subject,event_id:crypto.randomUUID(),event_name:'marketing_consent_withdrawn',timestamp:new Date(Math.max(Date.now(),Date.parse(this.events().at(-1)?.timestamp||'')+1||Date.now())).toISOString(),actor:'admin',channel:'all'};
+    try {
+      localStorage.setItem(PREFIX+event.event_id,JSON.stringify(event));
+      if(visitorId===this.visitorId){localStorage.setItem('ttwr.consent','withdrawn');this.consentGranted.set(false);}
+      this.events.update(events=>[...events,event]);return true;
+    } catch {this.storageError.set(true);return false;}
+  }
+
   grantConsent(source: ConsentSource, impressionId: string, contactType: string): void {
     this.id('ttwr.user', localStorage, 'U');
     this.trackEvent('contact_info_submitted', { contact_type: contactType });

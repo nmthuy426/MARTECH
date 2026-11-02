@@ -1,3 +1,9 @@
+import { FamilyPanel } from './family/family';
+import { Livestream } from './livestream/livestream';
+import { AdminDataSource } from '../../services/admin-data-source';
+import { ActivatedRoute } from '@angular/router';
+import { AdminOperations } from './operations/admin-operations';
+import { CampaignAdminStore } from '../../services/campaign-admin-store';
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -5,19 +11,48 @@ import { RouterLink } from '@angular/router';
 import { MarTechService } from '../../services/martech-service';
 import { analyze, ratio } from '../../services/dashboard-analytics';
 @Component({
- selector:'app-admin', imports:[CommonModule,FormsModule,RouterLink],
+ selector:'app-admin', imports:[CommonModule,FormsModule,RouterLink,AdminOperations,Livestream,FamilyPanel],
  templateUrl:'./admin.html', styleUrl:'./admin.css'
 })
 export class Admin {
- readonly tracking = inject(MarTechService);
+ readonly adminStore=inject(CampaignAdminStore);
+ readonly activeTab=signal('overview');
+ readonly tabs=[
+  {id:'overview',name:'Tổng quan',icon:'▦',description:'Theo dõi hành trình từ một ký ức đến một kết nối mới.'},
+  {id:'customers',name:'Khách hàng & Lead',icon:'◉',description:'Hồ sơ khách hàng, trạng thái phễu và lịch sử tương tác.'},
+  {id:'families',name:'Gia đình & Hồ sơ con',icon:'♡',description:'Liên kết phụ huynh, các bé và lịch sử chăm sóc.'},
+  {id:'consultation',name:'Tư vấn & Chatbot',icon:'☏',description:'Ghi nhận nhu cầu, gợi ý sản phẩm và tiếp nhận tư vấn.'},
+  {id:'stories',name:'Câu chuyện & Memory Card',icon:'▧',description:'Lưu giữ câu chuyện và xem lại những thẻ ký ức đã tạo.'},
+  {id:'community',name:'Cộng đồng & UGC',icon:'★',description:'Kiểm duyệt bài cộng đồng và lựa chọn câu chuyện nổi bật.'},
+  {id:'automation',name:'Chăm sóc & Automation',icon:'↗',description:'Thiết kế nội dung, kiểm tra điều kiện và mô phỏng follow-up.'},
+  {id:'livestream',name:'Phân tích Livestream',icon:'▶',description:'Từ câu hỏi của phụ huynh đến đề xuất nội dung video.'},
+  {id:'orders',name:'Đơn hàng & Voucher',icon:'◇',description:'Theo dõi giao dịch đã ghi nhận và quản lý voucher nháp.'},
+  {id:'consent',name:'Consent & Quyền dữ liệu',icon:'✓',description:'Theo dõi sự đồng ý và quyền sử dụng dữ liệu của khách.'},
+  {id:'settings',name:'Cấu hình Campaign',icon:'⚙',description:'Thông tin chiến dịch và quy tắc vận hành của bản demo.'},
+ ];
+ readonly currentTab=computed(()=>this.tabs.find(t=>t.id===this.activeTab())||this.tabs[0]);
+ constructor(){
+  this.tracking.activate();
+
+  inject(ActivatedRoute).queryParamMap.subscribe(params=>{
+   const id=params.get('tab')||'overview';
+   this.activeTab.set(this.tabs.some(t=>t.id===id)?id:'overview');
+   this.search.set('');this.page.set(0);
+   // Each tab opens at its own heading; preserve data filters between tabs.
+   if(typeof window.scrollTo==='function') window.scrollTo({top:0});
+  });
+ }
+
+ readonly tracking = inject(AdminDataSource);
  readonly source = signal('all'); readonly device = signal('all');
  readonly from = signal(''); readonly to = signal(''); readonly search = signal('');
  readonly page = signal(0);
  readonly sources = computed(()=> [...new Set(this.tracking.events().map(e=>e.utm_source))].sort());
  readonly history = computed(()=>this.tracking.events().filter(e=>
    (!this.to() || this.day(e.timestamp)<=this.to())));
+ readonly acquisitionSources=computed(()=>new Map(this.tracking.customers().map(c=>[c.visitor_id,c.source])));
  readonly filtered = computed(()=>this.history().filter(e=>
-   (this.source()==='all'||e.utm_source===this.source()) &&
+   (this.source()==='all'||(this.tracking.mode()==='mock'?this.acquisitionSources().get(e.visitor_id):e.utm_source)===this.source()) &&
    (this.device()==='all'||e.device===this.device()) &&
    (!this.from() || this.day(e.timestamp)>=this.from())));
  readonly stats = computed(()=>analyze(this.filtered(),this.history()));
@@ -25,6 +60,18 @@ export class Admin {
    `${e.event_name} ${e.visitor_id} ${e.session_id} ${e.user_id||''}`.toLowerCase().includes(this.search().toLowerCase())));
  readonly rows = computed(()=>this.matching().slice(this.page()*15,this.page()*15+15));
  readonly lastUpdate = computed(()=>this.tracking.events().at(-1)?.timestamp);
+ readonly finance=computed(()=>{
+  const data=this.tracking.mode()==='mock'?this.tracking.dataset():null;
+  if(!data)return null;
+  const costs=data.campaign_costs.filter(c=>this.source()==='all'||c.channel===this.source()).filter(c=>{
+   const start=new Date(data.campaign.start+'T00:00:00+07:00');start.setUTCDate(start.getUTCDate()+(c.week-1)*7);
+   const end=new Date(start.getTime()+7*86400000-1);return (!this.from()||this.day(end.toISOString())>=this.from())&&(!this.to()||this.day(start.toISOString())<=this.to());
+  });
+  const total=costs.reduce((n,c)=>n+c.amount,0),ads=costs.filter(c=>c.cost_type==='quang_cao').reduce((n,c)=>n+c.amount,0);
+  const firstBuyers=new Set(this.filtered().filter(e=>['purchase','voucher_redeem'].includes(e.event_name)&&e['campaign_attributed']===true).map(e=>e.visitor_id));
+  const s=this.stats(),aov=s.orders?s.revenue/s.orders:null;
+  return {total,ads,aov,cac:firstBuyers.size?total/firstBuyers.size:null,roas:ads?s.revenue/ads:null,ltv:aov===null?null:aov*data.campaign.ltv_total_purchases_12m};
+ });
  readonly funnel = computed(()=>{
    const s=this.stats();
    return [
@@ -35,6 +82,7 @@ export class Admin {
     {name:'Xem bộ sưu tập',value:s.collection,note:'Phiên mở trang sản phẩm'},
    ];
  });
+ selectData(mode:'live'|'mock'){this.tracking.select(mode);this.reset();}
  day(timestamp:string) { return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(timestamp)); }
  sessions(name:string) { return new Set(this.filtered().filter(e=>e.event_name===name).map(e=>e.session_id)).size; }
  landingSessions() { return this.sessions('landing_page_view'); }

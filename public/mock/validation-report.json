@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "assertions": 35918,
+  "customers": 400,
+  "sessions": 539,
+  "events": 3524,
+  "first_touch": {
+    "tiktok": 120,
+    "zalo": 40,
+    "facebook": 180,
+    "direct": 20,
+    "youtube": 40
+  },
+  "devices": {
+    "mobile": 320,
+    "desktop": 80
+  },
+  "final_stages": {
+    "Khách ẩn danh": 348,
+    "SQL": 6,
+    "Lead": 21,
+    "Customer": 14,
+    "MQL": 11
+  },
+  "cumulative_funnel": {
+    "lead": 46,
+    "mql": 25,
+    "sql": 14,
+    "customer": 14
+  },
+  "sql_to_customer_percent": 57.1429,
+  "consent": {
+    "create": {
+      "shown": 93,
+      "granted": 32,
+      "rate_percent": 34.4086
+    },
+    "share": {
+      "shown": 35,
+      "granted": 9,
+      "rate_percent": 25.7143
+    },
+    "connect": {
+      "shown": 20,
+      "granted": 5,
+      "rate_percent": 25.0
+    }
+  },
+  "stories": 98,
+  "ugc_statuses": {
+    "approved": 18,
+    "pending": 8,
+    "hidden": 4
+  },
+  "orders": 14,
+  "revenue": 6297500,
+  "aov": 449821.4285714286,
+  "cac": 228571.42857142858,
+  "roas": 2.6239583333333334,
+  "ltv_revenue_assumption": 1349464.2857142857,
+  "followup_ctr_percent": {
+    "A": 8.695652173913043,
+    "B": 17.391304347826086
+  }
+}
