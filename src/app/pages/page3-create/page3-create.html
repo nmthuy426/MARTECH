@@ -1,0 +1,403 @@
+<!-- Top Marquee Ticker -->
+<div class="w-full bg-canary-yellow border-b-[3px] border-ink-black py-2 overflow-hidden select-none">
+  <div class="flex whitespace-nowrap gap-6 animate-pulse items-center">
+    <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase tracking-wider">⚡ BƯỚC 02: KỂ CHUYỆN &amp; TẢI ẢNH</span>
+    <span class="font-badge-sticker text-badge-sticker text-electric-red">✦</span>
+    <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase tracking-wider">HƠN 12,480 THẺ BÀI ĐÃ ĐƯỢC ĐÚC THÀNH CÔNG</span>
+    <span class="font-badge-sticker text-badge-sticker text-electric-blue">★</span>
+    <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase tracking-wider">MYKINGDOM RETRO LAB 1990 - 2005</span>
+    <span class="font-badge-sticker text-badge-sticker text-electric-red">✦</span>
+    <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase tracking-wider">LƯU GIỮ KÝ ỨC KHÔNG BAO GIỜ PHAI MÀU</span>
+    <span class="font-badge-sticker text-badge-sticker text-toxic-mint">⚡</span>
+    <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase tracking-wider">BƯỚC 02: KỂ CHUYỆN &amp; TẢI ẢNH</span>
+  </div>
+</div>
+
+<section class="w-full px-margin-mobile md:px-margin py-8 md:py-12 relative">
+  <!-- Floating Quirky Decorative Badges -->
+  <div class="absolute right-6 top-8 hidden xl:flex flex-col items-end gap-2 pointer-events-none z-20">
+    <div class="bg-hyper-pink text-paper-white font-badge-sticker text-badge-sticker px-3 py-1.5 border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] rotate-[4deg]">
+      MEMORIES NEVER DIE! ★
+    </div>
+    <div class="bg-toxic-mint text-ink-black font-badge-sticker text-badge-sticker px-3 py-1 border-[3px] border-ink-black shadow-[3px_3px_0px_#111111] rotate-[-2.5deg]">
+      CHẤT LƯỢNG 100% RETRO
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <div class="flex flex-col gap-3 max-w-4xl mb-8 md:mb-12">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="bg-canary-yellow text-ink-black font-badge-sticker text-badge-sticker px-3 py-1 border-[2.5px] border-ink-black shadow-[3px_3px_0px_#111111] rotate-[-1.5deg] uppercase">
+        XƯỞNG ĐÚC THẺ BÀI RETRO
+      </span>
+      <span class="bg-electric-blue text-paper-white font-badge-sticker text-badge-sticker px-2.5 py-1 border-[2.5px] border-ink-black shadow-[2px_2px_0px_#111111] rotate-[1.5deg] uppercase">
+        STAGE 02 / 04
+      </span>
+    </div>
+
+    <h1 class="font-headline-lg text-headline-lg text-ink-black uppercase tracking-tight leading-none mt-1">
+      KỂ CÂU CHUYỆN &amp; TẢI ẢNH TUỔI THƠ
+    </h1>
+
+    <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+      Thổi bùng ký ức vàng son bằng bức ảnh thời thơ ấu cùng một mẩu chuyện "bá đạo" nhất của bạn. Hệ thống sẽ tự động biến tấu thành thẻ sưu tập Pop-Art độc bản!
+    </p>
+  </div>
+
+  <!-- 2-Column Main Interactive Layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <!-- LEFT COLUMN: Image Upload / Polaroid Sandbox (5 Cols) -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+      <!-- Polaroid Shell Container -->
+      <div class="bg-paper-white border-[3px] border-ink-black shadow-[6px_6px_0px_#111111] p-4 md:p-6 relative rotate-[-1deg] transition-transform hover:rotate-0">
+        <!-- Washi Tape & Naughty Stickers Accents -->
+        <div class="absolute -top-3 left-10 w-20 h-6 bg-canary-yellow border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] rotate-[-4deg] z-10 opacity-90"></div>
+        <div class="absolute -top-3 right-10 w-16 h-6 bg-hyper-pink border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] rotate-[3deg] z-10 opacity-90"></div>
+        <div class="absolute -bottom-2 -left-2 bg-toxic-mint text-ink-black font-badge-sticker text-badge-sticker px-2.5 py-1 border-[2px] border-ink-black shadow-[3px_3px_0px_#111111] rotate-[-8deg] z-20 uppercase font-bold">
+          📎 GHIM KÝ ỨC
+        </div>
+        <div class="absolute -top-4 -right-3 bg-canary-yellow text-ink-black font-badge-sticker text-badge-sticker px-2.5 py-1 border-[2px] border-ink-black shadow-[3px_3px_0px_#111111] rotate-[12deg] z-20 uppercase font-bold">
+          ⚡ ĐƯA ẢNH ĐÂY!
+        </div>
+
+        <!-- Dropzone Card -->
+        <div class="relative group cursor-pointer border-[3px] border-dashed border-ink-black bg-warm-eggshell p-6 flex flex-col items-center justify-center text-center min-h-[340px] transition-all hover:bg-surface-container">
+          <!-- Hidden Native File Input -->
+          <input
+            accept="image/*"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+            type="file"
+            (change)="onFileSelected($event)"
+          >
+
+          <!-- Active Upload Preview -->
+          <div
+            *ngIf="previewImageSrc"
+            class="absolute inset-0 w-full h-full p-2 z-20 bg-paper-white flex flex-col"
+          >
+            <div class="relative w-full h-full border-[2px] border-ink-black overflow-hidden bg-surface-dim">
+              <img
+                class="w-full h-full object-cover"
+                [src]="previewImageSrc"
+                alt="Preview memory photo"
+              >
+              <button
+                class="absolute top-2 right-2 bg-electric-red text-paper-white border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] px-2 py-1 font-label-md text-label-md uppercase hover:bg-ink-black transition-colors z-40"
+                type="button"
+                (click)="removePhoto()"
+              >
+                ✕ Thay Ảnh
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty Dropzone State Visuals -->
+          <div *ngIf="!previewImageSrc" class="flex flex-col items-center gap-3">
+            <div class="w-20 h-20 bg-canary-yellow rounded-full border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] flex items-center justify-center text-ink-black group-hover:scale-110 group-hover:rotate-12 transition-transform relative">
+              <span class="material-symbols-outlined text-4xl">photo_camera</span>
+              <span class="absolute -bottom-1 -right-1 text-xl select-none">✨</span>
+            </div>
+
+            <div class="flex flex-col gap-1 px-2">
+              <span class="font-headline-sm text-headline-sm text-ink-black uppercase tracking-tight">
+                THẢ TẤM ẢNH KỶ NIỆM VÀO ĐÂY! 📸
+              </span>
+              <span class="font-label-md text-label-md text-electric-blue uppercase tracking-wide font-bold">
+                (HOẶC NHẤP CHUỘT ĐỂ TẢI TỪ MÁY TÍNH)
+              </span>
+            </div>
+
+            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mt-1">
+              Chấp nhận định dạng JPG, PNG, WEBP. Ảnh thời máy film hay máy quét đều cực chất!
+            </p>
+
+            <div class="mt-2 bg-paper-white text-ink-black font-badge-sticker text-badge-sticker px-3 py-1 border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] uppercase">
+              Tối đa 15MB • Tự động phục hồi màu
+            </div>
+          </div>
+        </div>
+
+        <!-- Polaroid Footnote Area -->
+        <div class="pt-4 flex items-center justify-between border-t-[2px] border-ink-black mt-4">
+          <span class="font-body-md text-body-md text-ink-black italic font-bold">#KyUcLungLinh_199x 🚀</span>
+          <span class="bg-toxic-mint text-ink-black font-label-md text-label-md px-2.5 py-0.5 border-[2px] border-ink-black font-bold shadow-[2px_2px_0px_#111111]">
+            FRAME READY
+          </span>
+        </div>
+      </div>
+
+      <!-- Preset Selectors -->
+      <div class="bg-surface-container-low border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] p-4 flex flex-col gap-3">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-electric-red">auto_fix_high</span>
+          <span class="font-headline-sm text-headline-sm text-ink-black uppercase text-base">
+            CHƯA TÌM THẤY ẢNH CŨ?
+          </span>
+        </div>
+
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Chọn ngay một biểu tượng đồ chơi mẫu kinh điển từ kho ký ức MyKingdom để đúc thử thẻ bài:
+        </p>
+
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <button
+            class="preset-pill bg-paper-white hover:bg-canary-yellow border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] active:translate-x-[1px] active:translate-y-[1px] p-2 flex items-center gap-2 text-left transition-all"
+            type="button"
+            (click)="selectPreset('brick')"
+          >
+            <span class="text-xl">🧱</span>
+            <span class="font-label-md text-label-md uppercase text-ink-black truncate">Gạch Xếp Lego</span>
+          </button>
+
+          <button
+            class="preset-pill bg-paper-white hover:bg-canary-yellow border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] active:translate-x-[1px] active:translate-y-[1px] p-2 flex items-center gap-2 text-left transition-all"
+            type="button"
+            (click)="selectPreset('tamiya')"
+          >
+            <span class="text-xl">🏎️</span>
+            <span class="font-label-md text-label-md uppercase text-ink-black truncate">Xe Đua Tamiya</span>
+          </button>
+
+          <button
+            class="preset-pill bg-paper-white hover:bg-canary-yellow border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] active:translate-x-[1px] active:translate-y-[1px] p-2 flex items-center gap-2 text-left transition-all"
+            type="button"
+            (click)="selectPreset('tamagotchi')"
+          >
+            <span class="text-xl">👾</span>
+            <span class="font-label-md text-label-md uppercase text-ink-black truncate">Gà Ảo Tamagotchi</span>
+          </button>
+
+          <button
+            class="preset-pill bg-paper-white hover:bg-canary-yellow border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] active:translate-x-[1px] active:translate-y-[1px] p-2 flex items-center gap-2 text-left transition-all"
+            type="button"
+            (click)="selectPreset('doll')"
+          >
+            <span class="text-xl">🪆</span>
+            <span class="font-label-md text-label-md uppercase text-ink-black truncate">Búp Bê Giấy Retro</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quirky Notice Box -->
+      <div class="border-[3px] border-ink-black bg-canary-yellow p-4 shadow-[4px_4px_0px_#111111] flex items-start gap-3">
+        <span class="text-2xl select-none">💡</span>
+        <p class="font-body-sm text-body-sm text-ink-black leading-snug">
+          <strong>Mẹo xịn:</strong> Ảnh chụp càng mộc mạc hoặc có vết xước film thời xưa khi đúc ra thẻ Hologram trông sẽ càng "ngầu" và đậm chất hoài niệm!
+        </p>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Form Inputs & Story Sandbox (7 Cols) -->
+    <div class="lg:col-span-7 flex flex-col gap-6">
+      <form class="bg-paper-white border-[3px] border-ink-black shadow-[6px_6px_0px_#111111] p-6 md:p-8 flex flex-col gap-6 relative" (submit)="onSubmit()">
+        <!-- Stamp Ribbon Decoration -->
+        <div class="absolute -top-4 right-6 bg-electric-red text-paper-white font-badge-sticker text-badge-sticker px-3 py-1 border-[2px] border-ink-black shadow-[3px_3px_0px_#111111] rotate-[2deg] uppercase">
+          HỒ SƠ THẺ BÀI SỐ #089
+        </div>
+
+        <!-- INPUT 1: Nickname -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <label class="font-headline-sm text-headline-sm text-ink-black uppercase flex items-center gap-2" for="nickname">
+              <span class="w-6 h-6 rounded-full bg-canary-yellow border-[2px] border-ink-black flex items-center justify-center font-label-md text-label-md font-bold">1</span>
+              BIỆT DANH TUỔI THƠ CỦA BẠN 😜
+            </label>
+            <div class="flex items-center gap-2">
+              <span class="bg-toxic-mint text-ink-black font-badge-sticker text-badge-sticker px-2 py-0.5 border-[2px] border-ink-black shadow-[2px_2px_0px_#111111] rotate-[-2deg] uppercase font-bold">NHẬP BÁ ĐẠO VÀO!</span>
+              <span class="font-label-md text-label-md text-electric-red uppercase font-bold">* BẮT BUỘC</span>
+            </div>
+          </div>
+
+          <input
+            id="nickname"
+            type="text"
+            name="nickname"
+            required
+            placeholder="VD: Cu Tí Xóm Chùa / Bé Bắp Răng Sún / Siêu Nhân Đỏ..."
+            class="w-full bg-paper-white border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] px-4 py-3 font-body-md text-body-md text-ink-black focus:outline-none focus:border-electric-blue focus:shadow-[6px_6px_0px_#111111] transition-all placeholder:text-on-surface-variant/60"
+            [(ngModel)]="nickname"
+          >
+        </div>
+
+        <!-- INPUT 2: Nostalgia Period / Year -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <label class="font-headline-sm text-headline-sm text-ink-black uppercase flex items-center gap-2" for="periodYear">
+              <span class="w-6 h-6 rounded-full bg-canary-yellow border-[2px] border-ink-black flex items-center justify-center font-label-md text-label-md">2</span>
+              NĂM HOẶC GIAI ĐOẠN HOÀI NIỆM
+            </label>
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase">CHỌN MỐC THỜI GIAN</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <input
+              id="periodYear"
+              type="text"
+              name="periodYear"
+              placeholder="VD: Năm 1998, Hè 2002..."
+              class="md:col-span-2 w-full bg-paper-white border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] px-4 py-3 font-body-md text-body-md text-ink-black focus:outline-none focus:border-electric-blue focus:shadow-[6px_6px_0px_#111111] transition-all placeholder:text-on-surface-variant/60"
+              [(ngModel)]="periodYear"
+            >
+
+            <select
+              id="eraCategory"
+              name="eraCategory"
+              class="w-full bg-warm-eggshell border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] px-3 py-3 font-label-md text-label-md uppercase text-ink-black focus:outline-none cursor-pointer"
+              [(ngModel)]="eraCategory"
+            >
+              <option value="90s">Thập niên 90s</option>
+              <option value="2000s">Giai đoạn 2000 - 2005</option>
+              <option value="2006s">Giai đoạn 2006 - 2010</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- INPUT 3: Story Textarea -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <label class="font-headline-sm text-headline-sm text-ink-black uppercase flex items-center gap-2" for="storyText">
+              <span class="w-6 h-6 rounded-full bg-canary-yellow border-[2px] border-ink-black flex items-center justify-center font-label-md text-label-md">3</span>
+              CÂU CHUYỆN &amp; KỶ NIỆM KHÓ QUÊN
+            </label>
+
+            <div class="bg-surface-container-high px-2 py-0.5 border-[2px] border-ink-black font-label-md text-label-md text-ink-black">
+              <span>{{ wordCount }}</span> / 300 từ
+            </div>
+          </div>
+
+          <div class="relative">
+            <textarea
+              id="storyText"
+              name="storyText"
+              rows="5"
+              maxlength="1500"
+              placeholder="Kể về chiến tích nhịn ăn sáng gom tiền mua đồ chơi, trốn ngủ trưa rủ cả xóm lập đội đua Tamiya, hay lần đầu lắp trọn bộ Lego mà giấu tiệt dưới gầm giường..."
+              class="w-full bg-paper-white border-[3px] border-ink-black shadow-[4px_4px_0px_#111111] p-4 font-body-md text-body-md text-ink-black focus:outline-none focus:border-hyper-pink focus:shadow-[6px_6px_0px_#111111] transition-all placeholder:text-on-surface-variant/60 resize-none"
+              [(ngModel)]="storyText"
+              (input)="onStoryInput()"
+            ></textarea>
+
+            <!-- Quick Mood Chips inside story box bottom -->
+            <div class="flex flex-wrap gap-2 pt-2 items-center">
+              <span class="font-label-md text-label-md uppercase text-ink-black mr-1">Tâm trạng chủ đạo:</span>
+              <button class="mood-tag bg-warm-eggshell hover:bg-canary-yellow border-[2px] border-ink-black px-2 py-0.5 font-label-md text-label-md uppercase transition-colors" type="button" (click)="addMood('Quậy Phá 😈')">Quậy Phá 😈</button>
+              <button class="mood-tag bg-warm-eggshell hover:bg-canary-yellow border-[2px] border-ink-black px-2 py-0.5 font-label-md text-label-md uppercase transition-colors" type="button" (click)="addMood('Cảm Động 🥹')">Cảm Động 🥹</button>
+              <button class="mood-tag bg-warm-eggshell hover:bg-canary-yellow border-[2px] border-ink-black px-2 py-0.5 font-label-md text-label-md uppercase transition-colors" type="button" (click)="addMood('Tự Hào 😎')">Tự Hào 😎</button>
+              <button class="mood-tag bg-warm-eggshell hover:bg-canary-yellow border-[2px] border-ink-black px-2 py-0.5 font-label-md text-label-md uppercase transition-colors" type="button" (click)="addMood('Hài Hước 😂')">Hài Hước 😂</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHECKBOXES SECTION -->
+        <div class="flex flex-col gap-3 pt-2 border-t-[2px] border-ink-black">
+          <!-- Checkbox 1 -->
+          <label class="flex items-start gap-3 cursor-pointer group select-none">
+            <input
+              type="checkbox"
+              name="galleryConsent"
+              class="peer sr-only"
+              [(ngModel)]="galleryConsent"
+            >
+            <div class="w-6 h-6 min-w-[24px] bg-paper-white border-[3px] border-ink-black shadow-[2px_2px_0px_#111111] peer-checked:bg-toxic-mint flex items-center justify-center transition-all group-hover:translate-x-[-1px] group-hover:translate-y-[-1px]">
+              <span class="material-symbols-outlined text-ink-black font-bold text-lg hidden peer-checked:block">check</span>
+            </div>
+            <span class="font-body-md text-body-md text-ink-black leading-snug">
+              Đồng ý đưa thẻ bài lên <strong>Triển Lãm Ký Ức Cộng Đồng</strong> (Triển lãm online kỷ niệm 20 năm MyKingdom).
+            </span>
+          </label>
+
+          <!-- Checkbox 2 -->
+          <label class="flex items-start gap-3 cursor-pointer group select-none">
+            <input
+              type="checkbox"
+              name="voucherConsent"
+              class="peer sr-only"
+              [(ngModel)]="voucherConsent"
+            >
+            <div class="w-6 h-6 min-w-[24px] bg-paper-white border-[3px] border-ink-black shadow-[2px_2px_0px_#111111] peer-checked:bg-toxic-mint flex items-center justify-center transition-all group-hover:translate-x-[-1px] group-hover:translate-y-[-1px]">
+              <span class="material-symbols-outlined text-ink-black font-bold text-lg hidden peer-checked:block">check</span>
+            </div>
+            <span class="font-body-md text-body-md text-ink-black leading-snug">
+              Nhận <strong>Voucher Quà Tặng 30%</strong> từ MyKingdom gửi về số điện thoại hoặc email khi hoàn tất thẻ.
+            </span>
+          </label>
+        </div>
+
+        <!-- ACTION ROW & GIANT CTA -->
+        <div class="relative pt-4 flex flex-col md:flex-row items-center gap-4">
+          <!-- Playful Explosive Lightning Badge & Arrow -->
+          <div class="hidden md:flex flex-col items-center absolute -left-12 -bottom-3 text-ink-black select-none pointer-events-none z-20">
+            <span class="font-badge-sticker text-badge-sticker bg-toxic-mint text-ink-black border-[2px] border-ink-black px-2 py-1 rotate-[-12deg] shadow-[3px_3px_0px_#111111] font-bold whitespace-nowrap">
+              NHẤP LÀ NỔ KÝ ỨC! 💥
+            </span>
+            <svg class="rotate-[15deg] mt-1 text-ink-black stroke-current stroke-[3]" fill="none" height="40" viewBox="0 0 48 40" width="48">
+              <path d="M6 6C14 22 28 30 42 34M42 34L30 34M42 34L38 22" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+
+          <!-- Giant Vibrant Submit Button -->
+          <button
+            class="w-full bg-electric-red hover:bg-hyper-pink text-paper-white border-[4px] border-ink-black shadow-[6px_6px_0px_#111111] hover:shadow-[8px_8px_0px_#111111] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#111111] py-4 px-6 flex items-center justify-center gap-3 transition-all cursor-pointer group relative overflow-hidden"
+            type="submit"
+          >
+            <span class="material-symbols-outlined text-3xl group-hover:rotate-12 transition-transform text-canary-yellow">bolt</span>
+            <span class="font-headline-md text-headline-md uppercase text-center tracking-tight leading-none text-2xl md:text-3xl font-bold">
+              GENERATE MY MEMORY CARD ➔
+            </span>
+            <span class="material-symbols-outlined text-3xl group-hover:rotate-[-12deg] transition-transform text-canary-yellow">bolt</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Guarantee Pill Strip -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="bg-paper-white border-[2.5px] border-ink-black shadow-[3px_3px_0px_#111111] p-3 flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-electric-blue text-2xl">lock_person</span>
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md uppercase text-ink-black">Bảo Mật Kỷ Niệm</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant text-xs">Không chia sẻ dữ liệu riêng</span>
+          </div>
+        </div>
+
+        <div class="bg-paper-white border-[2.5px] border-ink-black shadow-[3px_3px_0px_#111111] p-3 flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-hyper-pink text-2xl">download</span>
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md uppercase text-ink-black">Tải Về Chuẩn In 4K</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant text-xs">Sẵn sàng in ép plastic</span>
+          </div>
+        </div>
+
+        <div class="bg-paper-white border-[2.5px] border-ink-black shadow-[3px_3px_0px_#111111] p-3 flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-toxic-mint text-2xl">loyalty</span>
+          <div class="flex flex-col">
+            <span class="font-label-md text-label-md uppercase text-ink-black">Quà Tặng Tương Tác</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant text-xs">Nhận voucher mua đồ chơi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Toast / Processing Modal Simulation -->
+  <div *ngIf="isProcessing" class="fixed inset-0 bg-ink-black/60 z-50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-paper-white border-[4px] border-ink-black shadow-[8px_8px_0px_#111111] p-6 md:p-8 max-w-md w-full flex flex-col items-center text-center gap-4 animate-bounce-short">
+      <div class="w-16 h-16 bg-canary-yellow rounded-full border-[3px] border-ink-black flex items-center justify-center animate-spin">
+        <span class="material-symbols-outlined text-4xl text-ink-black">autorenew</span>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <span class="font-headline-sm text-headline-sm uppercase text-ink-black">ĐANG ĐÚC THẺ KÝ ỨC ART...</span>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Đang áp bộ lọc 90s Pop-Art, thêm viền lấp lánh và in số series đặc biệt...
+        </p>
+      </div>
+
+      <div class="w-full bg-surface-container border-[2px] border-ink-black h-4 overflow-hidden">
+        <div class="bg-electric-red h-full transition-all duration-300" [style.width.%]="progressPercent"></div>
+      </div>
+
+      <span class="font-badge-sticker text-badge-sticker text-ink-black uppercase">VUI LÒNG ĐỢI GIÂY LÁT ⚡</span>
+    </div>
+  </div>
+</section>
+
