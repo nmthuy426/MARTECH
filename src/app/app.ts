@@ -7,7 +7,7 @@ export class App {
  readonly isDemo = signal(false);
  readonly currentPath = signal('/home');
  readonly backPath = computed(() => {
-  const previous:Record<string,string> = {'/choose-memory':'/home','/create-memory':'/choose-memory','/memory-card':'/create-memory','/recommended-toys':'/memory-card','/gallery':'/home'};
+  const previous:Record<string,string> = {'/choose-memory':'/home','/create-memory':'/choose-memory','/memory-card':'/create-memory','/recommended-toys':'/memory-card','/gallery':'/home','/gift-shop':'/memory-card'};
   return this.currentPath()==='/home' ? null : this.currentPath()==='/admin' ? this.campaignPath() : previous[this.currentPath()] || '/home';
  });
  readonly campaignPath = signal(sessionStorage.getItem('ttwr.campaign_path') || '/home');

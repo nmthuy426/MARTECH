@@ -18,6 +18,7 @@ export class Admin {
  readonly adminStore=inject(CampaignAdminStore);
  readonly activeTab=signal('overview');
  readonly tabs=[
+  {id:'livestream',name:'Phân tích tương tác & Ý tưởng nội dung',icon:'✦',description:'Từ bình luận đa kênh đến nhu cầu nổi bật và bản nháp bài post, video.'},
   {id:'overview',name:'Tổng quan',icon:'▦',description:'Theo dõi hành trình từ một ký ức đến một kết nối mới.'},
   {id:'customers',name:'Khách hàng & Lead',icon:'◉',description:'Hồ sơ khách hàng, trạng thái phễu và lịch sử tương tác.'},
   {id:'families',name:'Gia đình & Hồ sơ con',icon:'♡',description:'Liên kết phụ huynh, các bé và lịch sử chăm sóc.'},
@@ -25,7 +26,6 @@ export class Admin {
   {id:'stories',name:'Câu chuyện & Memory Card',icon:'▧',description:'Lưu giữ câu chuyện và xem lại những thẻ ký ức đã tạo.'},
   {id:'community',name:'Cộng đồng & UGC',icon:'★',description:'Kiểm duyệt bài cộng đồng và lựa chọn câu chuyện nổi bật.'},
   {id:'automation',name:'Chăm sóc & Automation',icon:'↗',description:'Thiết kế nội dung, kiểm tra điều kiện và mô phỏng follow-up.'},
-  {id:'livestream',name:'Phân tích Livestream',icon:'▶',description:'Từ câu hỏi của phụ huynh đến đề xuất nội dung video.'},
   {id:'orders',name:'Đơn hàng & Voucher',icon:'◇',description:'Theo dõi giao dịch đã ghi nhận và quản lý voucher nháp.'},
   {id:'consent',name:'Consent & Quyền dữ liệu',icon:'✓',description:'Theo dõi sự đồng ý và quyền sử dụng dữ liệu của khách.'},
   {id:'settings',name:'Cấu hình Campaign',icon:'⚙',description:'Thông tin chiến dịch và quy tắc vận hành của bản demo.'},

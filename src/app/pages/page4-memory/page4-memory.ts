@@ -1,3 +1,4 @@
+import { GiftInvitation } from '../../components/gift-invitation/gift-invitation';
 import { ConsentPrompt } from '../../components/consent-prompt/consent-prompt';
 import { CampaignAdminStore } from '../../services/campaign-admin-store';
 import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit } from '@angular/core';
@@ -8,7 +9,7 @@ import { MarTechService } from '../../services/martech-service';
 
 @Component({
   selector: 'app-page4-memory',
-  imports:[ConsentPrompt,RouterLink],
+  imports:[ConsentPrompt,RouterLink,GiftInvitation],
   templateUrl: './page4-memory.html',
   styleUrls: ['./page4-memory.css']
 })
@@ -30,6 +31,8 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
   contactSaved = false;
   contactMessage = '';
   isDownloading = false;
+  giftPromptVisible=false;
+  closeGiftPrompt(){this.giftPromptVisible=false;const panel=this.host.nativeElement.querySelector('#connectPanel');if(panel&&!this.impressionId&&!this.contactSaved)this.observer?.observe(panel);try{sessionStorage.setItem('ttwr.gift-prompt.'+this.storyId,'shown');}catch{}}
   sharePromptVisible=false;voucherMessage='';
   private observer?:IntersectionObserver;
   private impressionId='';
@@ -38,9 +41,9 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
     if(typeof IntersectionObserver==='undefined')return;
     const panel=this.host.nativeElement.querySelector('#connectPanel');
     if(!panel)return;
-    this.observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting&&e.intersectionRatio>=.5)&&!this.impressionId&&!this.contactSaved){
+    this.observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting&&e.intersectionRatio>=.5)&&!this.giftPromptVisible&&!this.impressionId&&!this.contactSaved){
       this.impressionId=crypto.randomUUID();this.marTechService.trackEvent('marketing_consent_shown',{consent_source:'create',consent_impression_id:this.impressionId});
-    }},{threshold:.5});this.observer.observe(panel);
+    }},{threshold:.5});if(!this.giftPromptVisible)this.observer.observe(panel);
   }
   ngOnDestroy(){this.observer?.disconnect();}
   shareCard(){this.marTechService.trackEvent('share_click',{share_channel:'facebook',story_id:this.storyId});this.sharePromptVisible=true;window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.origin+'/gallery'),'_blank','noopener,noreferrer');}
@@ -64,6 +67,7 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
       }
     }
 
+    this.giftPromptVisible=!!savedData&&!sessionStorage.getItem('ttwr.gift-prompt.'+this.storyId);
     this.marketingConsent=this.marTechService.consentGranted();
     this.ugcConsent=this.adminStore.campaignStories().find(s=>s.id===this.storyId)?.ugcConsent||false;
     // 2. Bắn Event Tracking MarTech (Giai đoạn 4.1 trong Docs)
@@ -273,15 +277,7 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
     return (value || 'memory-card').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9-]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'memory-card';
   }
 
-  // Thêm/Kiểm tra hàm này trong page4-memory.component.ts
-
-goToPage5(): void {
-  // 1. Bắn event MarTech tracking khi click khám phá đồ chơi gợi ý
-  this.marTechService.trackEvent('product_collection_click', {
-    theme_id: this.cardData.theme_id
-  });
-
-  // 2. Chuyển sang Trang 5
-  this.router.navigate(['/recommended-toys']);
-}
+  openGiftPrompt(): void {
+    this.giftPromptVisible=true;
+  }
 }

@@ -1,0 +1,27 @@
+# Luồng tương tác → Memory Card → chọn quà
+
+## Mở demo
+
+- Admin phân tích: `/admin?tab=livestream` (tên mới: Phân tích tương tác & Ý tưởng nội dung, đứng trước Tổng quan).
+- Campaign: `/home` → `/choose-memory` → `/create-memory` → `/memory-card`.
+- Cửa hàng demo: `/gift-shop`.
+
+## Phân tích nội dung
+
+Chọn nội dung và kênh (TikTok/Facebook/YouTube), bấm phân tích. Cột trái chứa bình luận, cột phải chứa nhóm nhu cầu, tỷ trọng, dẫn chứng và phản hồi. Mỗi bình luận có thể thuộc nhiều nhóm. Phần dưới tạo bài post hoặc kịch bản video 30/60/90 giây, chỉnh sửa, sao chép và lưu nháp. Có thể nhập tối đa 500 bình luận/lần, mỗi dòng một bình luận. Dữ liệu nhập chỉ ở phiên hiện tại. Bản nháp tách theo nguồn mock/live.
+
+Phân tích hiện dùng quy tắc và mẫu nội dung tại máy, được ghi rõ trên UI. Chưa có API thu thập bình luận, kết nối mô hình AI hoặc tự xuất bản. Không có khóa bí mật trong frontend.
+
+## Nhận thẻ và chọn người nhận
+
+Khi tạo Memory Card thành công, hiện hộp thoại chọn cho bản thân / chơi cùng con / tặng người khác. Có thể đóng để xem và tải thẻ. Hộp thoại chỉ tự mở một lần cho mỗi câu chuyện trong phiên; nút “Chọn quà theo người nhận” mở lại bất cứ lúc nào. Khách có thể dùng hồ sơ đã đồng ý lưu hoặc nhập thông tin tùy chọn. Thông tin tạm chỉ giữ trong sessionStorage, không được đẩy vào hồ sơ lâu dài khi chưa đồng ý.
+
+## Hồ sơ và đơn demo
+
+Tài khoản demo dùng tên hiển thị và bộ nhớ của trình duyệt, không phải tài khoản MyKingdom hoặc hệ thống xác thực an toàn. Không nhập thông tin nhạy cảm. Đăng xuất rồi dùng lại cùng tên để thử việc quay lại. Không đồng bộ giữa thiết bị.
+
+Nickname, nhóm tuổi, sở thích, màu yêu thích và món đồ chơi yêu thích đều tùy chọn. Chọn tài khoản và tích đồng ý lưu tại checkout mới tạo/cập nhật hồ sơ lâu dài. Đây là đồng ý cá nhân hóa gợi ý quà, hoàn toàn riêng với marketing consent. Không tự cấp marketing consent. Hồ sơ không được đưa vào tác vụ chăm sóc/automation cũ vì chưa có đồng ý cho mục đích đó. Có nút xóa hồ sơ và liên kết cá nhân hóa; lịch sử giao dịch được giữ.
+
+Sản phẩm, độ tuổi và giá là dữ liệu minh họa. Gợi ý xếp theo sở thích, món yêu thích, nhóm tuổi, màu và chủ đề thẻ; có lý do đi kèm. Nhóm 0–2 chưa có sản phẩm minh họa phù hợp. Checkout không yêu cầu thanh toán thật; MEMORY15 giảm 15%, MYKID-NOSTALGIA-30 giảm 30%, không cộng dồn.
+
+Đơn mang tiền tố DEMO_, kênh demo_checkout và shop_demo=true, không có cờ xác nhận campaign_attributed. Do đó không giả lập xác nhận doanh thu campaign. Đơn và hồ sơ con xuất hiện ở Admin khi chọn “Dữ liệu thao tác trực tiếp”; bộ mock 400 khách không bị sửa. Hồ sơ con được nối vào gia đình demo, giữ tên/tuổi/sở thích/màu/đồ chơi/đồng ý lưu; đơn mua cho hồ sơ đã lưu được gắn đúng bé. Mua không lưu vẫn tạo đơn, không tạo hồ sơ con. Không gửi email, Zalo hay thu tiền.

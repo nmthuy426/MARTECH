@@ -41,3 +41,21 @@
 .campaign-back-bar{padding:20px 40px;background:#fffdf0;border-bottom:3px solid #111}
 .campaign-back-row{margin-bottom:24px}
 @media(max-width:680px){.campaign-back{padding:8px 10px;font-size:10px;min-height:36px}.campaign-back-bar{padding:16px}.experience-view header:has(.campaign-back) .campaign-brand{display:none}}
+/* Shared gift invitation, optional recipient forms and demo checkout. */
+.gift-box{padding:24px;background:#fff;border:2px solid #111;box-shadow:4px 4px #111}
+.gift-sticker{display:inline-block;background:#ffd600;border:2px solid #111;padding:5px 10px;font-size:10px;font-weight:700;letter-spacing:1px}
+.gift-modal-shade{position:fixed;inset:0;background:#111b;z-index:1100;display:flex;align-items:center;justify-content:center;padding:20px}
+.gift-modal{position:relative;background:#fffbed;border:3px solid #111;box-shadow:7px 7px #ffd600;width:min(740px,100%);max-height:90dvh;overflow:auto;padding:30px;font:14px/1.6 'Space Grotesk',Arial,sans-serif;color:#111}
+.gift-modal h2{font-size:28px;line-height:1.2;margin:18px 30px 16px 0}.gift-close{position:absolute;top:12px;right:12px;font-size:20px!important}
+.gift-kind-options,.gift-actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.gift-kind-options .active{background:#00db89}
+.gift-modal button,.gift-box button,.gift-product button{border:2px solid #111;background:white;box-shadow:3px 3px #111;padding:9px 12px;font:700 12px/1.4 'Space Grotesk',Arial,sans-serif;cursor:pointer;color:#111}
+.gift-modal button:hover,.gift-box button:hover,.gift-product button:hover{background:#fff1ab}.gift-primary{background:#ffd600!important}.gift-box button:disabled{opacity:.45;cursor:default}
+.gift-modal label,.gift-box label{display:block;font-size:12px;font-weight:700;margin:12px 0}.gift-modal input,.gift-modal select,.gift-box input,.gift-box select{display:block;width:100%;padding:10px;border:2px solid #111;background:#fffdf0;font:14px/1.4 'Space Grotesk',Arial,sans-serif;margin-top:6px;color:#111}
+.recipient-fields{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}.recipient-panel .recipient-fields{grid-template-columns:1fr}.gift-hint{font-size:11px;color:#625d53;line-height:1.6}.gift-check{display:flex!important;align-items:start;gap:12px}.gift-check input{width:18px!important;height:18px;flex-shrink:0}
+@media(max-width:540px){.gift-modal{padding:22px}.gift-modal-shade{padding:12px}.recipient-fields{grid-template-columns:1fr}.gift-box{padding:18px}}
+
+.gift-shop-entry{padding:100px 24px 20px;background:#fffbed;text-align:center}
+
+.gift-modal::backdrop{background:#111b}.gift-modal{margin:auto}.gift-modal[open]{display:block}
+
+.gift-modal[open]{display:flex;flex-direction:column;overflow:hidden}.gift-modal-body{overflow:auto;min-height:0;padding-right:4px}.gift-modal .gift-actions{flex-shrink:0;border-top:2px solid #111;padding-top:16px;margin-bottom:0}.gift-modal .gift-close{z-index:1}

@@ -16,10 +16,17 @@ describe('Microsite and Admin share one live data source',()=>{
   vi.stubGlobal('IntersectionObserver',class {constructor(private cb:IntersectionObserverCallback){}observe(){this.cb([{isIntersecting:true,intersectionRatio:1}] as IntersectionObserverEntry[],this as unknown as IntersectionObserver);}disconnect(){}});
   TestBed.configureTestingModule({imports:[Page4Memory,CommunityGalleryComponent],providers:[provideRouter([])]});
   tracking=TestBed.inject(MarTechService);store=TestBed.inject(CampaignAdminStore);
-  const story=store.captureStory(card,false)!;sessionStorage.setItem('ttwr.current_story',story.id);sessionStorage.setItem('memory_card_data',JSON.stringify(card));
+  const story=store.captureStory(card,false)!;sessionStorage.setItem('ttwr.current_story',story.id);sessionStorage.setItem('memory_card_data',JSON.stringify(card));sessionStorage.setItem('ttwr.gift-prompt.'+story.id,'shown');
   tracking.trackEvent('story_submit_success',{story_id:story.id,card_id:story.cardId});
  });
  afterEach(()=>vi.unstubAllGlobals());
+ it('opens the optional gift prompt once and records consent visibility only after it closes',()=>{
+  sessionStorage.removeItem('ttwr.gift-prompt.'+sessionStorage.getItem('ttwr.current_story'));
+  const fixture=TestBed.createComponent(Page4Memory);fixture.detectChanges();const page=fixture.componentInstance;
+  expect(page.giftPromptVisible).toBe(true);expect(fixture.nativeElement.querySelector('dialog')).not.toBeNull();expect(tracking.events().filter(e=>e.event_name==='marketing_consent_shown')).toHaveLength(0);
+  (fixture.nativeElement.querySelector('.gift-close') as HTMLButtonElement).click();fixture.detectChanges();expect(fixture.nativeElement.querySelector('dialog')).toBeNull();expect(tracking.events().filter(e=>e.event_name==='marketing_consent_shown')).toHaveLength(1);
+  page.ngOnInit();expect(page.giftPromptVisible).toBe(false);page.openGiftPrompt();expect(page.giftPromptVisible).toBe(true);
+ });
  it('captures contact without marketing opt-in and publishes only after Admin approval',()=>{
   const fixture=TestBed.createComponent(Page4Memory);fixture.detectChanges();const page=fixture.componentInstance;
   page.contactValue='demo@example.com';page.ugcConsent=true;page.marketingConsent=false;page.saveConnectPreferences();
