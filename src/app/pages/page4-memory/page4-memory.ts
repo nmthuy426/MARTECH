@@ -24,6 +24,11 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
     theme_id: MemoryThemeId.GACH_LEGO
   };
 
+  get themeLabel():string {
+    const themes:Record<string,string>={gach_lego:'Tháp gạch sắc màu',bup_be:'Búp bê & thú bông',board_game:'Bàn cờ & boardgame',canh_dieu:'Cánh diều & gió lộng'};
+    return themes[this.cardData.theme_id]||'Ký ức tuổi thơ';
+  }
+
   // Connect – Nurture: optional contact capture (demo/local storage only)
   contactValue = '';
   marketingConsent = false;
@@ -144,8 +149,8 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
       // Recreate the existing retro trading-card visual as a crisp PNG.
       const frame = ctx.createLinearGradient(0, 0, 1200, 1500);
       frame.addColorStop(0, '#FFD600');
-      frame.addColorStop(0.5, '#FF4FA3');
-      frame.addColorStop(1, '#8CE8C0');
+      frame.addColorStop(0.5, '#FFD600');
+      frame.addColorStop(1, '#FFD600');
       ctx.fillStyle = frame;
       ctx.fillRect(0, 0, 1200, 1500);
       ctx.fillStyle = '#F8F0DC';
@@ -207,9 +212,9 @@ export class Page4Memory implements OnInit, AfterViewInit, OnDestroy {
       ctx.fillRect(88, 1200, 1024, 3);
       ctx.fillStyle = '#111111';
       ctx.font = 'bold 26px Arial, sans-serif';
-      ctx.fillText('MYKINGDOM CERTIFIED NOSTALGIA', 88, 1260);
+      ctx.fillText('THE TOYS WE REMEMBER x MYKINGDOM', 88, 1260);
       ctx.font = '22px Arial, sans-serif';
-      ctx.fillText('SERIES 01 · THE TOYS WE REMEMBER', 88, 1305);
+      ctx.fillText('Một món đồ chơi, một câu chuyện đáng nhớ.', 88, 1305);
       ctx.textAlign = 'right';
       ctx.fillText('A MEMORY TO KEEP', 1112, 1400);
       ctx.textAlign = 'left';
