@@ -26,16 +26,26 @@
       <span class="border-2 border-ink-black bg-toxic-mint px-3 py-2 text-xs font-bold uppercase shadow-[2px_2px_0_#111]">{{ memories().length }} MEMORY CARDS</span>
     </div>
 
-    <div class="mb-6 border-2 border-dashed border-ink-black/50 bg-warm-eggshell px-4 py-3 text-sm font-medium">
-      <strong>GHI CHÚ DEMO:</strong> Gallery gồm dữ liệu minh họa và các Memory Card đã được đồng ý chia sẻ và Admin duyệt trên chính trình duyệt này. Chưa có backend nên nội dung chưa được đồng bộ sang thiết bị khác.
-    </div>
+    @if (source.loading()) {
+      <p role="status" class="mb-6">Đang tải câu chuyện cộng đồng…</p>
+    } @else if (source.error()) {
+      <div role="alert" class="mb-6 border-2 border-ink-black p-4">
+        {{ source.error() }} <button type="button" (click)="source.load()" class="underline font-bold">Thử lại</button>
+      </div>
+    } @else if (!memories().length) {
+      <p class="mb-6">Chưa có câu chuyện được duyệt để chia sẻ. Hãy gửi ký ức của bạn!</p>
+    }
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       @for (memory of memories(); track memory.id) {
         <button type="button" (click)="openMemory(memory)" class="group flex h-full flex-col border-[3px] border-ink-black bg-paper-white text-left shadow-[6px_6px_0_#111] transition duration-150 hover:-translate-y-1 hover:shadow-[8px_8px_0_#111] focus:outline-none focus:ring-4 focus:ring-electric-blue">
           <div class="memory-art relative flex min-h-56 w-full flex-col items-center justify-center overflow-hidden border-b-[3px] border-ink-black p-5 text-center" [class.tone-yellow]="memory.cardTone === 'yellow'" [class.tone-pink]="memory.cardTone === 'pink'" [class.tone-mint]="memory.cardTone === 'mint'" [class.tone-blue]="memory.cardTone === 'blue'">
             <span class="absolute left-3 top-3 border-2 border-ink-black bg-paper-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">THE TOYS WE REMEMBER</span>
-            <span class="toy-emoji mt-5">{{ memory.toyEmoji }}</span>
+            @if (memory.photoUrl) {
+              <img [src]="memory.photoUrl" [alt]="'Ký ức của ' + memory.nickname" class="mt-8 h-32 w-full object-contain">
+            } @else {
+              <span class="toy-emoji mt-5">{{ memory.toyEmoji }}</span>
+            }
             <span class="mt-3 text-sm font-bold uppercase tracking-widest">{{ memory.themeLabel }}</span>
             <span class="absolute bottom-3 right-3 rotate-[-4deg] border-2 border-ink-black bg-canary-yellow px-2 py-1 text-xs font-bold">{{ memory.year }}</span>
             <span class="absolute bottom-3 left-3 text-xl">✦ ✦ ✦</span>
@@ -43,7 +53,7 @@
           <div class="flex flex-1 flex-col p-4">
             <div class="flex items-center justify-between gap-2">
               <h3 class="text-lg font-bold uppercase">{{ memory.nickname }}</h3>
-              <span class="shrink-0 border border-ink-black bg-warm-eggshell px-2 py-1 text-[10px] font-bold uppercase">{{ memory.isDemo ? 'DEMO CARD' : 'SHARED ON THIS DEVICE' }}</span>
+              <span class="shrink-0 border border-ink-black bg-warm-eggshell px-2 py-1 text-[10px] font-bold uppercase">{{ memory.featured ? 'NỔI BẬT' : 'ĐÃ DUYỆT' }}</span>
             </div>
             <p class="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-on-surface-variant">“{{ memory.story }}”</p>
             <span class="mt-4 flex items-center justify-between border-t-2 border-ink-black pt-3 text-xs font-bold uppercase">ĐỌC CÂU CHUYỆN <span class="text-xl">↗</span></span>
@@ -77,7 +87,7 @@
       </div>
       <h2 class="mt-5 pr-10 text-2xl font-bold uppercase">{{ memory.nickname }}’s memory</h2>
       <p class="mt-3 text-base leading-relaxed">“{{ memory.story }}”</p>
-      <div class="mt-6 flex items-center justify-between border-t-2 border-ink-black pt-4 text-xs font-bold uppercase"><span>{{ memory.isDemo ? 'DEMO STORY' : 'SHARED STORY' }} · {{ memory.year }}</span><button type="button" (click)="closeMemory()" class="border-2 border-ink-black bg-canary-yellow px-4 py-2 shadow-[2px_2px_0_#111]">ĐÓNG ✕</button></div>
+      <div class="mt-6 flex items-center justify-between border-t-2 border-ink-black pt-4 text-xs font-bold uppercase"><span>CÂU CHUYỆN CỘNG ĐỒNG · {{ memory.year }}</span><button type="button" (click)="closeMemory()" class="border-2 border-ink-black bg-canary-yellow px-4 py-2 shadow-[2px_2px_0_#111]">ĐÓNG ✕</button></div>
     </section>
   </div>
 }

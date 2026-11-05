@@ -55,7 +55,7 @@ export class AdminDataSource {
   return {name:c.name,start:c.start,end:c.end,dailyLimit:c.daily_limit,weeklyLimit:c.weekly_limit,abEnabled:c.ab_enabled,templateA:c.template_a,templateB:c.template_b,themes:c.themes.map(t=>({...t,products:t.products.join(', ')}))};
  });
  readonly storageError=computed(()=>this.mode()==='live'?this.live.storageError():!!this.writeError());
- constructor(){window.addEventListener('storage',e=>{if(e.key===KEY)this.changes.set(this.readChanges());});}
+ constructor(){window.addEventListener('storage',e=>{if(e.key===KEY)this.changes.set(this.readChanges());if(e.key==='ttwr.admin.source'&&this.activated){this.mode.set(e.newValue==='live'?'live':'mock');if(this.mode()==='mock'&&!this.dataset())void this.load();}});}
  private readChanges():Changes{try{return {...emptyChanges(),...JSON.parse(localStorage.getItem(KEY)||'{}')};}catch{return emptyChanges();}}
  private merge<T>(base:T[],patch:Record<string,T>,id:(row:T)=>string):T[]{const map=new Map(base.map(row=>[id(row),row]));for(const row of Object.values(patch))map.set(id(row),row);return [...map.values()];}
  activate(){if(this.activated)return;this.activated=true;this.select(localStorage.getItem('ttwr.admin.source')==='live'?'live':'mock');}

@@ -1,4 +1,6 @@
 export interface CommunityMemory {
+  photoUrl?: string | null;
+  featured?: boolean;
   id: string;
   nickname: string;
   themeId: string;

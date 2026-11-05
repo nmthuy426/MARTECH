@@ -29,7 +29,8 @@ describe('Microsite and Admin share one live data source',()=>{
   expect(gallery.memories().some(m=>m.nickname===card.nickname)).toBe(false);
   const story=store.campaignStories()[0];expect(store.moderate(story.id,'approved')).toBe(true);
   expect(gallery.memories().some(m=>m.id===story.id)).toBe(true);
-  TestBed.inject(AdminDataSource).mode.set('mock');expect(gallery.memories().some(m=>m.id===story.id)).toBe(true);
+  TestBed.inject(AdminDataSource).mode.set('mock');expect(gallery.memories().some(m=>m.id===story.id)).toBe(false);
+  TestBed.inject(AdminDataSource).mode.set('live');
   expect(store.updateCampaignUgc(story.id,false)).toBe(true);expect(gallery.memories().some(m=>m.id===story.id)).toBe(false);
  });
  it('pairs a real impression with opt-in, keeps raw contact out of tracking, and ignores repeated saves',()=>{
