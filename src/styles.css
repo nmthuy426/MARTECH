@@ -32,6 +32,8 @@
 .admin-shell .finance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .admin-shell .finance-grid span{display:block;font-size:11px}.admin-shell .finance-grid strong{display:block;font-size:23px;margin-top:8px;color:#2563eb}
 @media(max-width:650px){.admin-shell .finance-grid{grid-template-columns:repeat(2,1fr)}.admin-shell .finance-grid strong{font-size:18px}}
+/* Admin subnav group pills — rendered inside main content area when tab belongs to a multi-tab group. */
+.admin-shell .admin-subnav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:12px 16px;background:white;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}.admin-shell .admin-subnav a{padding:7px 14px;font-size:11px;font-weight:700;text-transform:uppercase;border:2px solid transparent;box-shadow:none;color:var(--ink)}.admin-shell .admin-subnav a:hover{background:var(--cream);border-color:var(--ink)}.admin-shell .admin-subnav a.active{background:var(--yellow);border-color:var(--ink);box-shadow:2px 2px 0 var(--ink)}
 
 /* Shared navigation for all pages outside Home. */
 .campaign-back{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:8px;min-height:40px;padding:9px 14px;border:2px solid #111;background:#fff;color:#111;box-shadow:3px 3px 0 #111;font:700 12px/1.2 'Space Grotesk',Arial,sans-serif;text-decoration:none;text-transform:uppercase;white-space:nowrap}

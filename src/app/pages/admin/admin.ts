@@ -10,6 +10,24 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MarTechService } from '../../services/martech-service';
 import { analyze, ratio } from '../../services/dashboard-analytics';
+
+/** Six logical groups for sidebar visual grouping (no structural change to tabs array). */
+export const ADMIN_GROUPS = [
+  { label: 'PHÂN TÍCH & NỘI DUNG', tabs: ['livestream'] },
+  { label: 'TỔNG QUAN', tabs: ['overview'] },
+  { label: 'KHÁCH HÀNG & GIA ĐÌNH', tabs: ['customers', 'families', 'consultation'] },
+  { label: 'NỘI DUNG & CỘNG ĐỒNG', tabs: ['stories', 'community'] },
+  { label: 'ĐƠN HÀNG & VOUCHER', tabs: ['orders'] },
+  { label: 'VẬN HÀNH & CẤU HÌNH', tabs: ['automation', 'consent', 'settings'] },
+];
+
+/** Sibling tabs within the same group — used to render subnav pills. */
+export function getGroupPeers(tabId: string, tabs: { id: string; name: string; icon: string }[]): { id: string; name: string; icon: string }[] {
+  const group = ADMIN_GROUPS.find((g) => g.tabs.includes(tabId));
+  if (!group || group.tabs.length < 2) return [];
+  return group.tabs.map((id) => tabs.find((t) => t.id === id)!).filter(Boolean);
+}
+
 @Component({
  selector:'app-admin', imports:[CommonModule,FormsModule,RouterLink,AdminOperations,Livestream,FamilyPanel],
  templateUrl:'./admin.html', styleUrl:'./admin.css'
@@ -18,7 +36,7 @@ export class Admin {
  readonly adminStore=inject(CampaignAdminStore);
  readonly activeTab=signal('overview');
  readonly tabs=[
-  {id:'livestream',name:'Phân tích tương tác & Ý tưởng nội dung',icon:'✦',description:'Từ bình luận đa kênh đến nhu cầu nổi bật và bản nháp bài post, video.'},
+  {id:'livestream',name:'Phân tích & Ý tưởng nội dung',icon:'✦',description:'Từ bình luận đa kênh đến nhu cầu nổi bật và bản nháp bài post, video.'},
   {id:'overview',name:'Tổng quan',icon:'▦',description:'Theo dõi hành trình từ một ký ức đến một kết nối mới.'},
   {id:'customers',name:'Khách hàng & Lead',icon:'◉',description:'Hồ sơ khách hàng, trạng thái phễu và lịch sử tương tác.'},
   {id:'families',name:'Gia đình & Hồ sơ con',icon:'♡',description:'Liên kết phụ huynh, các bé và lịch sử chăm sóc.'},
@@ -30,6 +48,16 @@ export class Admin {
   {id:'consent',name:'Consent & Quyền dữ liệu',icon:'✓',description:'Theo dõi sự đồng ý và quyền sử dụng dữ liệu của khách.'},
   {id:'settings',name:'Cấu hình Campaign',icon:'⚙',description:'Thông tin chiến dịch và quy tắc vận hành của bản demo.'},
  ];
+
+ /** Grouped sidebar nav — each group has a label and its tabs. */
+ readonly navGroups = ADMIN_GROUPS.map((g) => ({
+   ...g,
+   items: g.tabs.map((id) => this.tabs.find((t) => t.id === id)!).filter(Boolean),
+ }));
+
+ /** Sibling tabs within the same visual group for subnav pills. */
+ readonly groupPeers = computed(() => getGroupPeers(this.activeTab(), this.tabs));
+
  readonly currentTab=computed(()=>this.tabs.find(t=>t.id===this.activeTab())||this.tabs[0]);
  constructor(){
   this.tracking.activate();

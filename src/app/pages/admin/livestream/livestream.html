@@ -1,11 +1,492 @@
-<div class="notice">Phân tích demo bằng quy tắc và từ khóa; chưa gọi mô hình AI hay tự lấy dữ liệu từ nền tảng. Dùng bình luận mẫu hoặc dán bình luận của bạn để thử. Bản nháp cần được team kiểm tra, không tự đăng hay gửi tin.</div>
-@if(message()){<p role="status">{{message()}}</p>}
-<section class="box"><div class="filters"><label>Nội dung đang phân tích<select [ngModel]="session()" (ngModelChange)="session.set($event);reset()"><option value="family">Đồ chơi gia đình · livestream & bài đăng</option><option value="creative">Góc sáng tạo · video & bài đăng</option></select></label><label>Kênh<select [ngModel]="channel()" (ngModelChange)="channel.set($event);reset()"><option value="all">Tất cả kênh</option><option value="tiktok">TikTok</option><option value="facebook">Facebook</option><option value="youtube">YouTube</option></select></label></div><div class="stats"><div><strong>{{comments().length}}</strong>Bình luận đầu vào</div><div><strong>{{classified()}}</strong>Có nhu cầu được nhận diện</div><div><strong>{{result() ? result()!.length-classified() : 0}}</strong>Khác / chưa nhận diện</div></div><button (click)="analyze()" [disabled]="!comments().length">Phân tích tương tác</button>@if(stale()){<p role="status">Có bình luận mới chưa được phân tích. Hãy chạy lại.</p>}</section>
-<div class="columns">
- <section class="box"><h2>01 · Bình luận & phản hồi</h2><label>Tìm bình luận<input type="search" [ngModel]="search()" (ngModelChange)="search.set($event);page.set(0)"></label><div class="comments">@for(c of rows().slice(page()*10,page()*10+10);track c.id){<article><b>{{c.name}}</b><small>{{c.source||'Nhập tay'}} · {{c.time}}</small><p>{{c.text}}</p></article>}@empty{<p>Chưa có bình luận phù hợp. Chọn kênh khác hoặc nhập thêm bình luận.</p>}</div><div class="pager"><span>{{rows().length}} bình luận · Trang {{page()+1}}</span><button aria-label="Bình luận trang trước" [disabled]="page()===0" (click)="page.set(page()-1)">←</button><button aria-label="Bình luận trang sau" [disabled]="(page()+1)*10>=rows().length" (click)="page.set(page()+1)">→</button></div><details><summary>Nhập bình luận để phân tích</summary><label>Nguồn bình luận<select [(ngModel)]="inputSource"><option value="tiktok">TikTok</option><option value="facebook">Facebook</option><option value="youtube">YouTube</option></select></label><label>Tên hiển thị<input [(ngModel)]="name" maxlength="80"></label><label>Nội dung<textarea [(ngModel)]="text" maxlength="2000" rows="2"></textarea></label><button (click)="add()" [disabled]="!text.trim()">Thêm bình luận</button><label>Dán nhiều bình luận, mỗi dòng một bình luận<textarea [(ngModel)]="bulk" rows="5" maxlength="100000" placeholder="Bé 4 tuổi chơi được không?&#10;Có hướng dẫn lắp ráp không shop?"></textarea></label><button (click)="importComments()" [disabled]="!bulk.trim()">Nhập danh sách bình luận</button><p class="hint">Tối đa 500 dòng/lần, chỉ giữ trong phiên đang mở.</p></details></section>
- <section class="box"><h2>02 · Chủ đề khách quan tâm</h2>@if(result();as r){<p>{{classified()}} / {{r.length}} bình luận có nhu cầu nhận diện. Một bình luận có thể thuộc nhiều nhóm; tỷ trọng không cộng thành 100%.</p>@for(g of topics();track g.id){<article class="topic"><h3>{{g.name}} <span>{{g.comments.length}} · {{r.length?(g.comments.length/r.length*100).toFixed(1):0}}%</span></h3><div class="bar"><i [style.width.%]="r.length?g.comments.length/r.length*100:0"></i></div><details><summary>Xem bình luận dẫn chứng</summary>@for(c of g.comments;track c.id){<blockquote>{{c.name}}: {{c.text}}</blockquote>}@empty{<p>Chưa có dẫn chứng.</p>}</details><button [disabled]="!g.comments.length||stale()" (click)="propose(g.id)">Chọn làm nội dung</button></article>}<h3>Điều khách thích & lo ngại</h3>@for(g of feedbackRows();track g.id){<details><summary>{{g.name}} · {{g.comments.length}}</summary>@for(c of g.comments;track c.id){<blockquote>{{c.text}}</blockquote>}</details>}}@else{<p>Bấm “Phân tích tương tác” để xem chủ đề và dẫn chứng từ danh sách bên trái.</p>}</section>
+<!-- Subtab Navigation -->
+<div class="subtabs-bar" role="tablist" aria-label="Nguồn phân tích">
+  <button
+    role="tab"
+    [attr.aria-selected]="activeSubtab() === 'comments'"
+    [class.active]="activeSubtab() === 'comments'"
+    (click)="setSubtab('comments')">
+    💬 Bình luận & phản hồi
+  </button>
+  <button
+    role="tab"
+    [attr.aria-selected]="activeSubtab() === 'gallery'"
+    [class.active]="activeSubtab() === 'gallery'"
+    (click)="setSubtab('gallery')">
+    ✦ Insight ký ức Campaign
+    @if (eligibleGalleryStories().length) {
+      <span class="count-pill">{{eligibleGalleryStories().length}}</span>
+    }
+  </button>
 </div>
-<section class="box studio" id="content-studio"><h2>03 · Ý tưởng & Kịch bản</h2><p>Chọn chủ đề có dẫn chứng để tạo bản nháp bài post hoặc video.</p><div class="filters"><label>Chủ đề<select [(ngModel)]="topicId">@for(g of topics();track g.id){<option [value]="g.id">{{g.name}} · {{g.comments.length}} bình luận</option>}</select></label><label>Định dạng<select [(ngModel)]="format"><option value="video">Video ngắn</option><option value="post">Bài post</option></select></label>@if(format==='video'){<label>Thời lượng<select [(ngModel)]="duration"><option [ngValue]="30">30 giây</option><option [ngValue]="60">60 giây</option><option [ngValue]="90">90 giây</option></select></label>}</div><button (click)="propose(topicId)" [disabled]="!result()||stale()">Tạo bản nháp {{format==='video'?'video':'bài post'}}</button>
- @if(draft();as d){<div class="draft"><h3>{{d.format==='video'?'Kịch bản video':'Bài post'}} · {{d.group}}</h3><label>Tiêu đề<input [(ngModel)]="d.title"></label><label>Câu mở đầu<textarea [(ngModel)]="d.hook" rows="2"></textarea></label><label>{{d.format==='video'?'Kịch bản theo phân cảnh':'Nội dung bài post'}}<textarea [(ngModel)]="d.outline" rows="12"></textarea></label><label>Lời kêu gọi hành động<textarea [(ngModel)]="d.cta" rows="2"></textarea></label><h3>Bình luận làm căn cứ</h3>@for(e of d.evidence;track e){<blockquote>{{e}}</blockquote>}<p class="hint">Kiểm tra sản phẩm, thông tin an toàn, giá và ưu đãi trước khi xuất bản. Tần suất trong mẫu bình luận không đại diện cho toàn bộ khách hàng.</p><button (click)="save()">Lưu bản nháp</button> <button (click)="copyDraft()">Sao chép nội dung</button> <button (click)="draft.set(null)">Đóng</button></div>}
-</section>
-<section class="box"><h2>Ý tưởng đã lưu</h2>@for(d of savedForMode();track d.id){<article><small>{{d.format==='post'?'Bài post':'Video'}} · {{d.channel||'all'}} · {{d.group}}</small><h3>{{d.title}}</h3><p>{{d.hook}}</p><p class="saved-outline">{{d.outline}}</p><p>{{d.cta}}</p></article>}@if(!savedForMode().length){<p>Chưa lưu ý tưởng nào.</p>}</section>
+
+@if (message()) {
+  <p class="status-msg" role="status">{{message()}}</p>
+}
+
+<!-- ==================== SUBTAB 1: BÌNH LUẬN & PHẢN HỒI ==================== -->
+@if (activeSubtab() === 'comments') {
+  <div class="notice">
+    Phân tích demo bằng quy tắc và từ khóa; chưa gọi mô hình AI hay tự lấy dữ liệu từ nền tảng. Dùng bình luận mẫu hoặc dán bình luận của bạn để thử. Bản nháp cần được team kiểm tra, không tự đăng hay gửi tin.
+  </div>
+
+  <section class="box">
+    <div class="filters">
+      <label>
+        Nội dung đang phân tích
+        <select [ngModel]="session()" (ngModelChange)="session.set($event); reset()">
+          <option value="family">Đồ chơi gia đình · livestream & bài đăng</option>
+          <option value="creative">Góc sáng tạo · video & bài đăng</option>
+        </select>
+      </label>
+      <label>
+        Kênh
+        <select [ngModel]="channel()" (ngModelChange)="channel.set($event); reset()">
+          <option value="all">Tất cả kênh</option>
+          <option value="tiktok">TikTok</option>
+          <option value="facebook">Facebook</option>
+          <option value="youtube">YouTube</option>
+        </select>
+      </label>
+    </div>
+    <div class="stats">
+      <div><strong>{{comments().length}}</strong>Bình luận đầu vào</div>
+      <div><strong>{{classified()}}</strong>Có nhu cầu được nhận diện</div>
+      <div><strong>{{result() ? result()!.length - classified() : 0}}</strong>Khác / chưa nhận diện</div>
+    </div>
+    <button (click)="analyze()" [disabled]="!comments().length">Phân tích tương tác</button>
+    @if (stale()) {
+      <p role="status" class="warning-text">Có bình luận mới chưa được phân tích. Hãy chạy lại.</p>
+    }
+  </section>
+
+  <div class="columns">
+    <section class="box">
+      <h2>01 · Bình luận & phản hồi</h2>
+      <label>
+        Tìm bình luận
+        <input type="search" [ngModel]="search()" (ngModelChange)="search.set($event); page.set(0)">
+      </label>
+      <div class="comments">
+        @for (c of rows().slice(page() * 10, page() * 10 + 10); track c.id) {
+          <article>
+            <b>{{c.name}}</b>
+            <small>{{c.source || 'Nhập tay'}} · {{c.time}}</small>
+            <p>{{c.text}}</p>
+          </article>
+        } @empty {
+          <p>Chưa có bình luận phù hợp. Chọn kênh khác hoặc nhập thêm bình luận.</p>
+        }
+      </div>
+      <div class="pager">
+        <span>{{rows().length}} bình luận · Trang {{page() + 1}}</span>
+        <button aria-label="Bình luận trang trước" [disabled]="page() === 0" (click)="page.set(page() - 1)">←</button>
+        <button aria-label="Bình luận trang sau" [disabled]="(page() + 1) * 10 >= rows().length" (click)="page.set(page() + 1)">→</button>
+      </div>
+      <details>
+        <summary>Nhập bình luận để phân tích</summary>
+        <label>
+          Nguồn bình luận
+          <select [(ngModel)]="inputSource">
+            <option value="tiktok">TikTok</option>
+            <option value="facebook">Facebook</option>
+            <option value="youtube">YouTube</option>
+          </select>
+        </label>
+        <label>Tên hiển thị<input [(ngModel)]="name" maxlength="80"></label>
+        <label>Nội dung<textarea [(ngModel)]="text" maxlength="2000" rows="2"></textarea></label>
+        <button (click)="add()" [disabled]="!text.trim()">Thêm bình luận</button>
+        <label>
+          Dán nhiều bình luận, mỗi dòng một bình luận
+          <textarea [(ngModel)]="bulk" rows="5" maxlength="100000" placeholder="Bé 4 tuổi chơi được không?&#10;Có hướng dẫn lắp ráp không shop?"></textarea>
+        </label>
+        <button (click)="importComments()" [disabled]="!bulk.trim()">Nhập danh sách bình luận</button>
+        <p class="hint">Tối đa 500 dòng/lần, chỉ giữ trong phiên đang mở.</p>
+      </details>
+    </section>
+
+    <section class="box">
+      <h2>02 · Chủ đề khách quan tâm</h2>
+      @if (result(); as r) {
+        <p>{{classified()}} / {{r.length}} bình luận có nhu cầu nhận diện. Một bình luận có thể thuộc nhiều nhóm; tỷ trọng không cộng thành 100%.</p>
+        @for (g of topics(); track g.id) {
+          <article class="topic">
+            <h3>{{g.name}} <span>{{g.comments.length}} · {{r.length ? (g.comments.length / r.length * 100).toFixed(1) : 0}}%</span></h3>
+            <div class="bar"><i [style.width.%]="r.length ? (g.comments.length / r.length * 100) : 0"></i></div>
+            <details>
+              <summary>Xem bình luận dẫn chứng</summary>
+              @for (c of g.comments; track c.id) {
+                <blockquote>{{c.name}}: {{c.text}}</blockquote>
+              } @empty {
+                <p>Chưa có dẫn chứng.</p>
+              }
+            </details>
+            <button [disabled]="!g.comments.length || stale()" (click)="propose(g.id)">Chọn làm nội dung</button>
+          </article>
+        }
+        <h3>Điều khách thích & lo ngại</h3>
+        @for (g of feedbackRows(); track g.id) {
+          <details>
+            <summary>{{g.name}} · {{g.comments.length}}</summary>
+            @for (c of g.comments; track c.id) {
+              <blockquote>{{c.text}}</blockquote>
+            }
+          </details>
+        }
+      } @else {
+        <p>Bấm “Phân tích tương tác” để xem chủ đề và dẫn chứng từ danh sách bên trái.</p>
+      }
+    </section>
+  </div>
+
+  <section class="box studio" id="content-studio">
+    <h2>03 · Ý tưởng & Kịch bản</h2>
+    <p>Chọn chủ đề có dẫn chứng để tạo bản nháp bài post hoặc video.</p>
+    <div class="filters">
+      <label>
+        Chủ đề
+        <select [(ngModel)]="topicId">
+          @for (g of topics(); track g.id) {
+            <option [value]="g.id">{{g.name}} · {{g.comments.length}} bình luận</option>
+          }
+        </select>
+      </label>
+      <label>
+        Định dạng
+        <select [(ngModel)]="format">
+          <option value="video">Video ngắn</option>
+          <option value="post">Bài post</option>
+        </select>
+      </label>
+      @if (format === 'video') {
+        <label>
+          Thời lượng
+          <select [(ngModel)]="duration">
+            <option [ngValue]="30">30 giây</option>
+            <option [ngValue]="60">60 giây</option>
+            <option [ngValue]="90">90 giây</option>
+          </select>
+        </label>
+      }
+    </div>
+    <button (click)="propose(topicId)" [disabled]="!result() || stale()">
+      Tạo bản nháp {{format === 'video' ? 'video' : 'bài post'}}
+    </button>
+
+    @if (draft(); as d) {
+      <div class="draft">
+        <h3>{{d.format === 'video' ? 'Kịch bản video' : 'Bài post'}} · {{d.group}}</h3>
+        <label>Tiêu đề<input [(ngModel)]="d.title"></label>
+        <label>Câu mở đầu<textarea [(ngModel)]="d.hook" rows="2"></textarea></label>
+        <label>{{d.format === 'video' ? 'Kịch bản theo phân cảnh' : 'Nội dung bài post'}}<textarea [(ngModel)]="d.outline" rows="12"></textarea></label>
+        <label>Lời kêu gọi hành động<textarea [(ngModel)]="d.cta" rows="2"></textarea></label>
+        <h3>Bình luận làm căn cứ</h3>
+        @for (e of d.evidence; track e) {
+          <blockquote>{{e}}</blockquote>
+        }
+        <p class="hint">Kiểm tra sản phẩm, thông tin an toàn, giá và ưu đãi trước khi xuất bản. Tần suất trong mẫu bình luận không đại diện cho toàn bộ khách hàng.</p>
+        <div class="action-row">
+          <button (click)="save()">Lưu bản nháp</button>
+          <button (click)="copyDraft()">Sao chép nội dung</button>
+          <button (click)="draft.set(null)">Đóng</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section class="box">
+    <h2>Ý tưởng đã lưu (Bình luận)</h2>
+    @for (d of savedForMode(); track d.id) {
+      <article>
+        <small>{{d.format === 'post' ? 'Bài post' : 'Video'}} · {{d.channel || 'all'}} · {{d.group}}</small>
+        <h3>{{d.title}}</h3>
+        <p>{{d.hook}}</p>
+        <p class="saved-outline">{{d.outline}}</p>
+        <p>{{d.cta}}</p>
+      </article>
+    } @if (!savedForMode().length) {
+      <p>Chưa lưu ý tưởng nào.</p>
+    }
+  </section>
+}
+
+<!-- ==================== SUBTAB 2: INSIGHT KÝ ỨC CAMPAIGN ==================== -->
+@if (activeSubtab() === 'gallery') {
+  <div class="notice gallery-notice">
+    <div class="scope-header">
+      <div>
+        <strong>Phân tích văn bản Memory Card trong Gallery Campaign</strong>
+        <p class="scope-meta">
+          Nguồn: <b>{{mode() === 'mock' ? 'Dữ liệu mô phỏng 400 khách' : 'Thao tác trực tiếp (Live)'}}</b>
+          · Điều kiện: <code>ugcConsent === true</code>, <code>submitted === true</code>, <code>status === 'approved'</code>
+          · Toàn bộ corpus đủ điều kiện: <b>{{eligibleGalleryStories().length}} câu chuyện</b>
+        </p>
+      </div>
+      <span class="mode-badge">Chế độ: Phân tích quy tắc (Mô phỏng)</span>
+    </div>
+    <p class="hint">
+      Phân tích văn bản câu chuyện, năm hoài niệm và chủ đề ký ức. Không phân tích ảnh AI, không suy luận tuổi hay thu nhập của khách. Mọi insight đều có câu chuyện dẫn chứng xác thực từ corpus.
+    </p>
+  </div>
+
+  <!-- Filter Bar -->
+  <section class="box">
+    <div class="filters">
+      <label>
+        Chủ đề ký ức
+        <select [ngModel]="galleryTheme()" (ngModelChange)="galleryTheme.set($event); galleryPage.set(0)">
+          <option value="all">Tất cả chủ đề</option>
+          <option value="gach_lego">🧱 Tháp gạch sắc màu</option>
+          <option value="bup_be">🧸 Búp bê & thú bông</option>
+          <option value="board_game">🎲 Bàn cờ & boardgame</option>
+          <option value="canh_dieu">🪁 Cánh diều & gió lộng</option>
+        </select>
+      </label>
+      <label>
+        Giai đoạn hoài niệm
+        <select [ngModel]="galleryEra()" (ngModelChange)="galleryEra.set($event); galleryPage.set(0)">
+          <option value="all">Tất cả giai đoạn</option>
+          <option value="80s">Thập niên 80s</option>
+          <option value="90s">Thập niên 90s</option>
+          <option value="00s">Thập niên 2000s</option>
+          <option value="10s">Thập niên 2010s</option>
+        </select>
+      </label>
+      <label>
+        Từ ngày gửi
+        <input type="date" [ngModel]="galleryFrom()" (ngModelChange)="galleryFrom.set($event); galleryPage.set(0)">
+      </label>
+      <label>
+        Đến ngày gửi
+        <input type="date" [min]="galleryFrom()" [ngModel]="galleryTo()" (ngModelChange)="galleryTo.set($event); galleryPage.set(0)">
+      </label>
+      <button class="reset-btn" (click)="resetGallery()">Đặt lại</button>
+    </div>
+
+    <div class="stats">
+      <div><strong>{{filteredGalleryStories().length}}</strong>Bài đủ điều kiện trong lọc</div>
+      <div><strong>{{galleryResult() ? galleryResult()!.insights.length : 0}}</strong>Nhóm insight nhận diện</div>
+      <div><strong>{{galleryResult() ? galleryResult()!.eligibleStoryCount : 0}}</strong>Bài đã phân tích</div>
+    </div>
+
+    <button (click)="analyzeGallery()" [disabled]="!filteredGalleryStories().length">
+      ✦ Phân tích ký ức Campaign ({{filteredGalleryStories().length}} bài)
+    </button>
+    @if (galleryStale()) {
+      <p role="status" class="warning-text">Bộ lọc hoặc tập câu chuyện đã thay đổi. Hãy bấm phân tích lại để cập nhật.</p>
+    }
+  </section>
+
+  <!-- 2-Column Section -->
+  <div class="columns">
+    <!-- Left: Story Input Corpus -->
+    <section class="box">
+      <h2>01 · Câu chuyện Gallery đủ điều kiện</h2>
+      <label>
+        Tìm câu chuyện / người kể
+        <input type="search" placeholder="Tìm theo tên, nội dung, năm..." [ngModel]="gallerySearch()" (ngModelChange)="gallerySearch.set($event); galleryPage.set(0)">
+      </label>
+
+      <div class="comments story-list">
+        @for (s of filteredGalleryStories().slice(galleryPage() * 8, galleryPage() * 8 + 8); track s.id) {
+          <article class="gallery-story-item">
+            <div class="story-item-head">
+              <b>{{themeEmoji(s.theme_id)}} {{s.nickname}}</b>
+              <small>{{themeName(s.theme_id)}} · Năm {{s.periodYear}} ({{s.eraCategory}})</small>
+            </div>
+            <p class="story-excerpt">{{s.storyText}}</p>
+            <div class="story-item-actions">
+              <span class="badge green">Đã duyệt UGC</span>
+              @if (s.featured) {
+                <span class="badge yellow">★ Nổi bật</span>
+              }
+              <button class="small-btn" (click)="openStoryDialog(s)">Xem câu chuyện & thẻ</button>
+            </div>
+          </article>
+        } @empty {
+          <p>Không có câu chuyện nào thỏa mãn điều kiện Gallery trong bộ lọc này.</p>
+        }
+      </div>
+
+      <div class="pager">
+        <span>{{filteredGalleryStories().length}} bài · Trang {{galleryPage() + 1}}</span>
+        <button aria-label="Trang trước" [disabled]="galleryPage() === 0" (click)="galleryPage.set(galleryPage() - 1)">←</button>
+        <button aria-label="Trang sau" [disabled]="(galleryPage() + 1) * 8 >= filteredGalleryStories().length" (click)="galleryPage.set(galleryPage() + 1)">→</button>
+      </div>
+    </section>
+
+    <!-- Right: Insight Clusters & Evidence -->
+    <section class="box">
+      <h2>02 · Insight ký ức & Trải nghiệm nổi bật</h2>
+      @if (galleryResult(); as res) {
+        <div class="insight-meta-info">
+          <span>Phân tích từ <b>{{res.eligibleStoryCount}}</b> câu chuyện đã duyệt.</span>
+          <small>Thời gian chạy: {{res.generatedAt | date:'HH:mm:ss dd/MM/yyyy':'+0700'}}</small>
+        </div>
+
+        <!-- Theme Distribution Quick View -->
+        <div class="distribution-row">
+          @for (t of res.themeDistribution; track t.themeId) {
+            <span class="dist-pill" [title]="t.name">
+              {{themeEmoji(t.themeId)}} {{t.count}} ({{t.percent}}%)
+            </span>
+          }
+        </div>
+
+        @for (i of res.insights; track i.id) {
+          <article class="topic insight-card">
+            <h3>
+              <span>{{i.title}}</span>
+              <span class="topic-stat">{{i.storyCount}} bài · {{i.sharePercent}}%</span>
+            </h3>
+            <div class="bar"><i [style.width.%]="i.sharePercent"></i></div>
+            <p class="insight-summary">{{i.summary}}</p>
+
+            <details>
+              <summary>Trích dẫn dẫn chứng ({{i.evidence.length}} câu chuyện)</summary>
+              @for (ev of i.evidence; track ev.storyId) {
+                <blockquote class="evidence-quote">
+                  <b>{{themeEmoji(ev.themeId)}} {{ev.nickname}} ({{ev.year}}):</b>
+                  “{{ev.excerpt}}”
+                  <button class="evidence-view-link" (click)="openStoryById(ev.storyId)">
+                    [Mở thẻ]
+                  </button>
+                </blockquote>
+              }
+            </details>
+
+            <div class="insight-actions">
+              <button [disabled]="galleryStale()" (click)="proposeGallery(i.id, 'post')">
+                ✎ Soạn bài post
+              </button>
+              <button class="secondary" [disabled]="galleryStale()" (click)="proposeGallery(i.id, 'video', 60)">
+                ▶ Soạn video (60s)
+              </button>
+            </div>
+          </article>
+        }
+      } @else {
+        <p>Bấm <b>“Phân tích ký ức Campaign”</b> ở trên để tổng hợp chủ đề, cảm xúc và nhu cầu từ kho câu chuyện Gallery.</p>
+      }
+    </section>
+  </div>
+
+  <!-- Studio for Gallery Drafts -->
+  <section class="box studio" id="gallery-content-studio">
+    <h2>03 · Ý tưởng & Kịch bản từ ký ức Gallery</h2>
+    <p>Chuyển hóa insight ký ức thành bài post mạng xã hội hoặc kịch bản video ngắn, có dẫn chứng câu chuyện thực tế.</p>
+
+    @if (galleryResult(); as res) {
+      <div class="filters">
+        <label>
+          Chọn Insight
+          <select [ngModel]="galleryTopicId()" (ngModelChange)="galleryTopicId.set($event)">
+            @for (i of res.insights; track i.id) {
+              <option [value]="i.id">{{i.title}} ({{i.storyCount}} bài)</option>
+            }
+          </select>
+        </label>
+        <label>
+          Định dạng
+          <select [ngModel]="galleryFormat()" (ngModelChange)="galleryFormat.set($event)">
+            <option value="video">Video ngắn (TikTok / Reels)</option>
+            <option value="post">Bài post (Facebook / Cộng đồng)</option>
+          </select>
+        </label>
+        @if (galleryFormat() === 'video') {
+          <label>
+            Thời lượng
+            <select [ngModel]="galleryDuration()" (ngModelChange)="galleryDuration.set($event)">
+              <option [ngValue]="30">30 giây</option>
+              <option [ngValue]="60">60 giây</option>
+              <option [ngValue]="90">90 giây</option>
+            </select>
+          </label>
+        }
+      </div>
+
+      <button (click)="proposeGallery(galleryTopicId())" [disabled]="galleryStale()">
+        Tạo bản nháp {{galleryFormat() === 'video' ? 'video' : 'bài post'}}
+      </button>
+    }
+
+    @if (galleryDraft(); as d) {
+      <div class="draft">
+        <h3>{{d.format === 'video' ? 'Kịch bản video (' + (d.duration || 60) + 's)' : 'Bài post'}} · {{d.insightTitle}}</h3>
+        <label>Tiêu đề<input [(ngModel)]="d.title"></label>
+        <label>Câu mở đầu (Hook)<textarea [(ngModel)]="d.hook" rows="2"></textarea></label>
+        <label>
+          {{d.format === 'video' ? 'Kịch bản chi tiết theo phân cảnh' : 'Nội dung bài viết'}}
+          <textarea [(ngModel)]="d.outline" rows="12"></textarea>
+        </label>
+        <label>Lời kêu gọi hành động (CTA)<textarea [(ngModel)]="d.cta" rows="2"></textarea></label>
+
+        <h3>Câu chuyện làm căn cứ dẫn chứng</h3>
+        @for (ev of d.evidence; track ev.storyId) {
+          <blockquote>
+            <b>{{ev.nickname}} ({{ev.year}} · {{themeName(ev.themeId)}}):</b> “{{ev.excerpt}}”
+          </blockquote>
+        }
+
+        <p class="hint">
+          Bản nháp được lưu tại trình duyệt này. Kiểm tra nội dung trước khi xuất bản. Số liệu trên tập bài không đại diện cho toàn bộ khách hàng.
+        </p>
+
+        <div class="action-row">
+          <button (click)="saveGalleryDraft()">Lưu bản nháp</button>
+          <button (click)="copyGalleryDraft()">Sao chép nội dung</button>
+          <button (click)="galleryDraft.set(null)">Đóng</button>
+        </div>
+      </div>
+    }
+  </section>
+
+  <!-- Saved Gallery Drafts -->
+  <section class="box">
+    <h2>Ý tưởng ký ức đã lưu</h2>
+    @for (d of gallerySavedForMode(); track d.id) {
+      <article class="saved-card">
+        <small>{{d.format === 'post' ? 'Bài post' : 'Video (' + (d.duration || 60) + 's)'}} · {{d.insightTitle}} · {{d.createdAt | date:'dd/MM/yyyy HH:mm':'+0700'}}</small>
+        <h3>{{d.title}}</h3>
+        <p><b>Hook:</b> {{d.hook}}</p>
+        <p class="saved-outline">{{d.outline}}</p>
+        <p><b>CTA:</b> {{d.cta}}</p>
+      </article>
+    } @if (!gallerySavedForMode().length) {
+      <p>Chưa có bản nháp ký ức nào được lưu ở chế độ này.</p>
+    }
+  </section>
+}
+
+<!-- Story Preview Modal -->
+@if (gallerySelectedStory(); as s) {
+  <div class="story-modal-shade" (click)="closeStoryDialog()">
+    <div class="story-modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h2>Memory Card · {{s.nickname}}</h2>
+        <button class="close-x" (click)="closeStoryDialog()">✕</button>
+      </div>
+      <div class="modal-body-grid">
+        <div class="preview-box">
+          @if (s.photoUrl) {
+            <img [src]="s.photoUrl" alt="Ảnh câu chuyện" loading="lazy">
+          } @else {
+            <div class="no-img"><span>{{themeEmoji(s.theme_id)}}</span></div>
+          }
+          <span class="sticker-tag">{{themeName(s.theme_id)}}</span>
+          <h3>{{s.nickname}} · {{s.periodYear}}</h3>
+          <p>{{s.storyText}}</p>
+        </div>
+        <div class="meta-box">
+          <p><b>Mã câu chuyện:</b> <code>{{s.id}}</code></p>
+          <p><b>Mã card:</b> <code>{{s.cardId || '—'}}</code></p>
+          <p><b>Chủ đề:</b> {{themeName(s.theme_id)}}</p>
+          <p><b>Giai đoạn:</b> {{s.eraCategory || '—'}}</p>
+          <p><b>Trạng thái Gallery:</b> <span class="badge green">Đã duyệt</span></p>
+          <p><b>Quyền UGC:</b> <span class="badge green">Đã cấp quyền</span></p>
+          <p class="hint">Bản xem trước dữ liệu câu chuyện gốc từ Gallery.</p>
+          <button (click)="closeStoryDialog()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

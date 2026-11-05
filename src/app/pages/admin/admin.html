@@ -5,6 +5,13 @@
  </aside>
  <main id="overview">
  <div class="page-content"><div class="campaign-back-row"><a class="campaign-back" routerLink="/home">← VỀ TRANG CHỦ</a></div><div class="heading"><div><p class="eyebrow">{{adminStore.settings().name}}</p><h1>{{currentTab().name}}@if(tracking.mode()==='live'){<span class="live-pill"><i></i> Trực tiếp</span>}</h1><p>{{currentTab().description}}</p></div><button [hidden]="['livestream','families','consultation'].includes(activeTab())" class="export" (click)="exportCsv()" [disabled]="!filtered().length">↓ Xuất dữ liệu CSV</button></div>
+ @if(groupPeers().length){
+ <div class="admin-subnav" role="tablist" aria-label="Điều hướng nhóm chức năng">
+   @for(peer of groupPeers(); track peer.id){
+     <a role="tab" [routerLink]="[]" [queryParams]="{tab:peer.id}" [class.active]="activeTab()===peer.id" [attr.aria-selected]="activeTab()===peer.id"><span aria-hidden="true">{{peer.icon}}</span> {{peer.name}}</a>
+   }
+ </div>
+ }
  <div class="source-picker" role="group" aria-label="Nguồn dữ liệu Admin"><button [class.selected]="tracking.mode()==='mock'" [attr.aria-pressed]="tracking.mode()==='mock'" (click)="selectData('mock')">Dữ liệu mô phỏng – 400 khách</button><button [class.selected]="tracking.mode()==='live'" [attr.aria-pressed]="tracking.mode()==='live'" (click)="selectData('live')">Dữ liệu thao tác trực tiếp</button></div>
  @if(activeTab()==='families'||activeTab()==='consultation'){<app-family-crm [view]="activeTab()"/>}@else if(activeTab()==='livestream'){<app-livestream [mode]="tracking.mode()"/>}@else{
 
