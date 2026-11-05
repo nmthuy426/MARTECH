@@ -33,8 +33,9 @@ Sau đó chạy project, mở Campaign và Admin hiện tại để hiểu hành
 
 ## 1. Mục tiêu bàn giao
 
-1. Phân tích nội dung Memory Card trong Gallery để tìm insight riêng cho campaign **The Toys We Remember**. Đặt thành tab con bên trong nhóm phân tích, cạnh phần phân tích bình luận hiện có.
-2. Tinh gọn điều hướng Admin: giữ những nhóm chính trên sidebar, đưa chức năng chi tiết vào tab con hoặc trang chi tiết để người dùng không bị ngợp. Gộp cách tổ chức, không âm thầm xóa chức năng hay dữ liệu.
+1. **Bổ sung phân tích câu chuyện Gallery:** Làm tương tự chức năng phân tích bình luận hiện có, nhưng đầu vào là nội dung các câu chuyện/Memory Card trong Gallery của campaign. Từ đó tổng hợp chủ đề, cảm xúc, trải nghiệm và nhu cầu nổi bật; mỗi insight phải có câu chuyện hoặc trích đoạn dẫn chứng, rồi đề xuất ý tưởng post/video phù hợp. Trong tab “Phân tích tương tác & Ý tưởng nội dung”, chia thành hai tab con: **“Bình luận & phản hồi”** và **“Insight ký ức Campaign”**.
+
+2. **Tối ưu bố cục và điều hướng Admin:** Hiện có nhiều tab chính nên khá ngợp. Gom các chức năng liên quan thành khoảng 5–6 nhóm chính, đưa phần chi tiết vào tab con hoặc hồ sơ tương ứng. Ưu tiên những thông tin và thao tác quan trọng, giảm các bảng/nội dung lặp lại giữa các tab, nhưng vẫn giữ chức năng và dữ liệu hiện có. Đề xuất cách nhóm cụ thể nằm trong mục 5 của file bàn giao.
 
 Không làm dự báo khả năng mua/rời bỏ, không tự đăng bài hoặc gửi email/Zalo. Không yêu cầu xây lại toàn bộ website hay chuyển framework để làm hai task này.
 
@@ -161,7 +162,7 @@ Mô hình chỉ đề xuất nhãn, tóm tắt và ý tưởng; backend phải x
 - Có thể tạo/chỉnh/lưu nháp từ insight; phần bình luận cũ vẫn hoạt động.
 - Ghi rõ kết quả chạy bằng AI thật hay rules; không gọi một bản nháp cố định là AI.
 
-## 5. Task 2 — Tinh gọn điều hướng Admin
+## 5. Task 2 — Tối ưu bố cục và điều hướng Admin
 
 Hiện Admin có 11 tab chính, gây cảm giác nhiều chức năng rời rạc. Mục tiêu là khoảng **5–6 nhóm chính**, ưu tiên công việc chính và đưa chức năng chi tiết xuống tab con. Đề xuất dưới đây là hướng mặc định, có thể điều chỉnh nếu trải nghiệm thực tế tốt hơn và có bảng ánh xạ rõ.
 
