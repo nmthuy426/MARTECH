@@ -1,10 +1,9 @@
 <div class="admin-shell">
  <aside class="sidebar"><a class="brand" routerLink="/admin"><img class="admin-brand-icon" src="brand/mykingdom-icon-red.png" alt="" width="44" height="44"><span>MYKINGDOM<small>MARKETING WORKSPACE</small></span></a>
- <div class="workspace"><span class="workspace-icon">✳</span><div>{{adminStore.settings().name}}<small>Campaign pilot · 2026</small></div></div>
  <p class="nav-caption">ĐIỀU HÀNH CHIẾN DỊCH</p>
  <nav aria-label="Các mục quản trị">@for(tab of tabs;track tab.id){<a [routerLink]="[]" [queryParams]="{tab:tab.id}" [class.active]="activeTab()===tab.id" [attr.aria-current]="activeTab()===tab.id?'page':null"><span aria-hidden="true">{{tab.icon}}</span><span>{{tab.name}}</span>@if(tab.id==='overview'&&tracking.mode()==='live'){<i>LIVE</i>}</a>}</nav>
- <div class="sidebar-bottom"><span class="avatar">T</span><div>Team Tech<small>Admin · Bản demo local</small></div></div></aside>
- <main id="overview"><header class="topbar"><span>Workspace <b>/</b> {{currentTab().name}}</span><a routerLink="/home" target="_blank" rel="noopener">Mở microsite ↗</a></header>
+ </aside>
+ <main id="overview">
  <div class="page-content"><div class="heading"><div><p class="eyebrow">{{adminStore.settings().name}}</p><h1>{{currentTab().name}}@if(tracking.mode()==='live'){<span class="live-pill"><i></i> Trực tiếp</span>}</h1><p>{{currentTab().description}}</p></div><button [hidden]="['livestream','families','consultation'].includes(activeTab())" class="export" (click)="exportCsv()" [disabled]="!filtered().length">↓ Xuất dữ liệu CSV</button></div>
  @if(activeTab()==='families'||activeTab()==='consultation'){<app-family-crm [view]="activeTab()"/>}@else if(activeTab()==='livestream'){<app-livestream [mode]="tracking.mode()"/>}@else{
  <div class="source-picker" role="group" aria-label="Nguồn dữ liệu Admin"><button [class.selected]="tracking.mode()==='mock'" [attr.aria-pressed]="tracking.mode()==='mock'" (click)="selectData('mock')">Dữ liệu mô phỏng – 400 khách</button><button [class.selected]="tracking.mode()==='live'" [attr.aria-pressed]="tracking.mode()==='live'" (click)="selectData('live')">Dữ liệu thao tác trực tiếp</button></div>
