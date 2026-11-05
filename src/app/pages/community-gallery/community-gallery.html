@@ -37,7 +37,7 @@
     }
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      @for (memory of memories(); track memory.id) {
+      @for (memory of visibleMemories(); track memory.id) {
         <button type="button" (click)="openMemory(memory)" class="group flex h-full flex-col border-[3px] border-ink-black bg-paper-white text-left shadow-[6px_6px_0_#111] transition duration-150 hover:-translate-y-1 hover:shadow-[8px_8px_0_#111] focus:outline-none focus:ring-4 focus:ring-electric-blue">
           <div class="memory-art relative flex min-h-56 w-full flex-col items-center justify-center overflow-hidden border-b-[3px] border-ink-black p-5 text-center" [class.tone-yellow]="memory.cardTone === 'yellow'" [class.tone-pink]="memory.cardTone === 'pink'" [class.tone-mint]="memory.cardTone === 'mint'" [class.tone-blue]="memory.cardTone === 'blue'">
             <span class="absolute left-3 top-3 border-2 border-ink-black bg-paper-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">THE TOYS WE REMEMBER</span>
@@ -61,6 +61,14 @@
         </button>
       }
     </div>
+
+    @if (pageCount() > 1) {
+      <nav aria-label="Phân trang Gallery" class="mt-8 flex items-center justify-center gap-4">
+        <button type="button" (click)="changePage(-1)" [disabled]="currentPage() === 1" class="border-2 border-ink-black bg-paper-white px-4 py-2 font-bold disabled:opacity-40">← Trang trước</button>
+        <span aria-live="polite">Trang {{ currentPage() }} / {{ pageCount() }}</span>
+        <button type="button" (click)="changePage(1)" [disabled]="currentPage() === pageCount()" class="border-2 border-ink-black bg-canary-yellow px-4 py-2 font-bold disabled:opacity-40">Trang sau →</button>
+      </nav>
+    }
 
     <div class="mt-12 flex flex-col items-center gap-4 border-[3px] border-ink-black bg-canary-yellow px-5 py-8 text-center shadow-[7px_7px_0_#111]">
       <span class="text-4xl">🧸 🪁 🎲</span>

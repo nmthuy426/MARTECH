@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MarTechService } from '../../services/martech-service';
 import { AdminDataSource } from '../../services/admin-data-source';
@@ -16,6 +16,11 @@ export class CommunityGalleryComponent implements OnInit {
   const stories=this.store.stories().filter(s=>s.ugcConsent&&s.submitted&&s.status==='approved').sort((a,b)=>Number(b.featured)-Number(a.featured)||b.createdAt.localeCompare(a.createdAt));
   return stories.map(s=>({id:s.id,nickname:s.nickname,themeId:s.theme_id,themeLabel:themes[s.theme_id]?.name||s.theme_id,story:s.storyText,year:s.periodYear,toyEmoji:themes[s.theme_id]?.emoji||'✦',cardTone:themes[s.theme_id]?.tone||'yellow',ugcConsent:true,isDemo:this.source.mode()==='mock',photoUrl:s.photoUrl,featured:s.featured}));
  });
+ readonly page=signal(1);
+ readonly pageCount=computed(()=>Math.max(1,Math.ceil(this.memories().length/9)));
+ readonly currentPage=computed(()=>Math.min(this.page(),this.pageCount()));
+ readonly visibleMemories=computed(()=>this.memories().slice((this.currentPage()-1)*9,this.currentPage()*9));
+ changePage(delta:number){this.page.set(Math.max(1,Math.min(this.pageCount(),this.currentPage()+delta)));}
  selectedMemory:CommunityMemory|null=null;
  ngOnInit(){this.source.activate();this.tracking.trackEvent('community_gallery_view',{visible_cards:this.memories().length});}
  openMemory(memory:CommunityMemory){this.selectedMemory=memory;this.tracking.trackEvent('community_story_view',{story_id:memory.id,theme_id:memory.themeId,data_type:memory.isDemo?'demo':'user_local'});}
