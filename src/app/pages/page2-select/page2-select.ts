@@ -38,6 +38,11 @@ export class Page2Select implements OnInit {
     });
   }
 
+  chooseAndContinue(themeId: MemoryThemeId): void {
+    this.selectCard(themeId);
+    this.goToPage3();
+  }
+
   goToPage3(): void {
     if (!this.themeSelected) this.selectCard(this.currentSelectedId);
     sessionStorage.setItem('theme_id', this.currentSelectedId);

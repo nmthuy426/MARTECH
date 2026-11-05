@@ -42,7 +42,7 @@ describe('Mock JSON visible across all eight Admin sections',()=>{
   const button=[...root.querySelectorAll('button')].find(b=>b.textContent?.includes('Xem câu chuyện & thẻ'))!;
   button.click();harness.detectChanges();
   expect(show).toHaveBeenCalledOnce();expect(dialog.open).toBe(true);
-  expect(dialog.textContent).toContain('Quân Cá Con');
+  expect(dialog.textContent).toContain([...fixture.stories].sort((a,b)=>b.created_at.localeCompare(a.created_at))[0].nickname);
   expect(dialog.querySelector('img')?.getAttribute('src')).toBe('/mock/images/story076-quan-ca-con.png');
   expect(root.querySelector('.detail')?.parentElement).toBe(dialog);
   (dialog.querySelector('button') as HTMLButtonElement).click();harness.detectChanges();
