@@ -29,6 +29,7 @@ export class CampaignAdminStore {
  private liveRuns=signal<LocalRun[]>(this.readRecords<LocalRun>('ttwr.run.'));
  private liveNotes=signal<CustomerNote[]>(this.readRecords<CustomerNote>('ttwr.note.'));
  private liveSettings=signal<CampaignSettings>(this.readSettings());
+ readonly campaignStories=this.liveStories.asReadonly();
  readonly stories=computed(()=>this.tracking.mode()==='mock'?this.tracking.storyRecords():this.liveStories());
  readonly vouchers=computed(()=>this.tracking.mode()==='mock'?this.tracking.voucherRecords():this.liveVouchers());
  readonly runs=computed(()=>this.tracking.mode()==='mock'?this.tracking.runRecords():this.liveRuns());
@@ -55,6 +56,12 @@ export class CampaignAdminStore {
  captureStory(data:MemoryCardFormData,ugc:boolean):CampaignStory|null{
   const story:CampaignStory={...data,id:crypto.randomUUID(),cardId:'CARD_'+crypto.randomUUID(),visitorId:localStorage.getItem('ttwr.visitor')||'',sessionId:sessionStorage.getItem('session_id')||'',createdAt:new Date().toISOString(),ugcConsent:ugc,submitted:ugc,status:'pending',featured:false};
   return this.write('ttwr.story.'+story.id,story,true)?story:null;
+ }
+ updateCampaignUgc(id:string,allowed:boolean):boolean{
+  const story=this.liveStories().find(s=>s.id===id&&s.visitorId===localStorage.getItem('ttwr.visitor'));
+  if(!story){this.error.set('Không tìm thấy câu chuyện của bạn. Hãy tạo thẻ trước khi gửi Gallery.');return false;}
+  const next={...story,ugcConsent:allowed,submitted:allowed,status:allowed?(story.ugcConsent?story.status:'pending'):'hidden',featured:allowed?story.featured:false} as CampaignStory;
+  return this.write('ttwr.story.'+story.id,next,true);
  }
  moderate(id:string,status:CampaignStory['status']):boolean{
   const story=this.stories().find(s=>s.id===id);if(!story)return false;

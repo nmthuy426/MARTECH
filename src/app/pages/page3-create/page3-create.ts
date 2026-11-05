@@ -159,6 +159,7 @@ onSubmit(): void {
 
       sessionStorage.setItem('memory_card_data', JSON.stringify(cardData));
       const storedStory = this.adminStore.captureStory(cardData, this.galleryConsent);
+      if(storedStory)sessionStorage.setItem('ttwr.current_story',storedStory.id);
       const storyMeta = {story_id:storedStory?.id,card_id:storedStory?.cardId};
       this.marTechService.trackEvent('story_submit_success', { ...storyMeta, theme_id: this.selectedTheme, story_length: this.storyText.length });
       this.marTechService.trackEvent('memory_card_create_success', { ...storyMeta, theme_id: this.selectedTheme });

@@ -99,9 +99,13 @@ export class MarTechService {
     } catch {this.storageError.set(true);return false;}
   }
 
-  grantConsent(source: ConsentSource, impressionId: string, contactType: string): void {
+  recordContact(contactType:string):void {
     this.id('ttwr.user', localStorage, 'U');
-    this.trackEvent('contact_info_submitted', { contact_type: contactType });
+    this.trackEvent('contact_info_submitted', {contact_type:contactType});
+  }
+
+  grantConsent(source: ConsentSource, impressionId: string, contactType: string): void {
+    this.recordContact(contactType);
     if (!localStorage.getItem('ttwr.ab_group')) {
       localStorage.setItem('ttwr.ab_group', crypto.getRandomValues(new Uint32Array(1))[0] % 2 ? 'A' : 'B');
     }

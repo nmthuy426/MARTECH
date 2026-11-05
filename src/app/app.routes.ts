@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { Page1IntroComponent } from './pages/page1-intro/page1-intro';
 import { Page2Select } from './pages/page2-select/page2-select';
 import { Page3Create } from './pages/page3-create/page3-create';
-import { Page4Memory } from './pages/page4-memory/page4-memory';
+
 import { Page5Product } from './pages/page5-product/page5-product';
 
 export const routes: Routes = [
@@ -16,9 +16,10 @@ export const routes: Routes = [
   { path: 'page1-intro', redirectTo: 'page1', pathMatch: 'full' },
   { path: 'page2', component: Page2Select },
   { path: 'page3', component: Page3Create },
-  { path: 'page4', component: Page4Memory },
+  { path: 'page4', loadComponent:()=>import('./pages/page4-memory/page4-memory').then(m=>m.Page4Memory) },
   { path: 'page5', component: Page5Product },
 
+  { path:'gallery',loadComponent:()=>import('./pages/community-gallery/community-gallery').then(m=>m.CommunityGalleryComponent) },
   // Trang không tồn tại -> quay về page 1
   { path: '**', redirectTo: 'page1' }
 ];

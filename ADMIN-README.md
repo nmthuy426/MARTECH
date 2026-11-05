@@ -114,3 +114,10 @@ Automation bổ sung hàng đợi sinh nhật trong 14 ngày, đổi nhóm tuổ
 Tổng quan thêm số gia đình, bé, việc cần xử lý, mua sau tư vấn và mua lại. Các bảng CRM được ghi rõ là toàn bộ nguồn đang chọn, độc lập bộ lọc event campaign. Giao dịch trước campaign chỉ phục vụ chăm sóc và tỷ lệ mua lại, không tăng doanh thu campaign. Chưa đo hiệu quả sau nhắc vì không có gửi thật/gán đơn sau nhắc.
 
 Tư vấn hiện nhập thủ công; gợi ý tối đa ba sản phẩm theo chủ đề và ngân sách từ danh mục mock, chưa xác minh độ tuổi/an toàn. Livestream thêm nhóm khen/lo ngại với dẫn chứng bằng từ khóa. Cấu hình hiển thị kết nối Facebook/Zalo/email/chatbot/POS là chưa kết nối. Chưa phát hành voucher QR đổi ở POS thật.
+
+
+## Tích hợp microsite vào main
+
+Campaign giữ trang Gallery và xuất PNG của nhánh microsite, dùng chung MarTechService/CampaignAdminStore với Admin. Story/card ID được lưu từ bước tạo thẻ; lựa chọn UGC cập nhật đúng bản ghi và vào hàng chờ duyệt. Gallery đọc bài thao tác trực tiếp đã duyệt, có consent, ưu tiên bài nổi bật; không xuất bản bộ mock. Form liên hệ sau thẻ ghi impression ở điểm create khi ít nhất 50% khối xuất hiện và gắn lựa chọn với đúng impression. Không lưu thông tin liên hệ thật.
+
+Các sửa test cũ trên nhánh microsite trước khi gộp được giữ trong Git stash có nhãn “Preserve microsite test fixes before main integration”; bản main vốn có cấu hình test đầy đủ.

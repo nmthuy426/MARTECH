@@ -1,0 +1,17 @@
+:host { display: block; }
+.memory-art { position: relative; isolation: isolate; }
+.memory-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .22;
+  background-image: radial-gradient(#111 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+.tone-yellow { background: linear-gradient(135deg, #ffd600 0%, #fff1a6 100%); }
+.tone-pink { background: linear-gradient(135deg, #ff2e93 0%, #ffc0dc 100%); }
+.tone-mint { background: linear-gradient(135deg, #00e676 0%, #c5ffdf 100%); }
+.tone-blue { background: linear-gradient(135deg, #2563eb 0%, #b8d4ff 100%); }
+.toy-emoji { font-size: 5.5rem; line-height: 1.1; filter: drop-shadow(3px 4px 0 rgba(17,17,17,.2)); transition: transform .2s ease; }
+button:hover .toy-emoji { transform: rotate(-7deg) scale(1.08); }
