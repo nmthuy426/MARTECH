@@ -32,3 +32,12 @@
 .admin-shell .finance-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .admin-shell .finance-grid span{display:block;font-size:11px}.admin-shell .finance-grid strong{display:block;font-size:23px;margin-top:8px;color:#2563eb}
 @media(max-width:650px){.admin-shell .finance-grid{grid-template-columns:repeat(2,1fr)}.admin-shell .finance-grid strong{font-size:18px}}
+
+/* Shared navigation for all pages outside Home. */
+.campaign-back{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:8px;min-height:40px;padding:9px 14px;border:2px solid #111;background:#fff;color:#111;box-shadow:3px 3px 0 #111;font:700 12px/1.2 'Space Grotesk',Arial,sans-serif;text-decoration:none;text-transform:uppercase;white-space:nowrap}
+.campaign-back:hover{background:#ffd600}
+.campaign-back:focus-visible{outline:3px solid #2563eb;outline-offset:4px}
+.campaign-back:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
+.campaign-back-bar{padding:20px 40px;background:#fffdf0;border-bottom:3px solid #111}
+.campaign-back-row{margin-bottom:24px}
+@media(max-width:680px){.campaign-back{padding:8px 10px;font-size:10px;min-height:36px}.campaign-back-bar{padding:16px}.experience-view header:has(.campaign-back) .campaign-brand{display:none}}

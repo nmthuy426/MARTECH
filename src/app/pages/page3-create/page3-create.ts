@@ -2,7 +2,7 @@ import { CampaignAdminStore } from '../../services/campaign-admin-store';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { MemoryThemeId, MemoryCardFormData } from '../../models/martech-events.model';
 import { MarTechService } from '../../services/martech-service';
@@ -11,7 +11,7 @@ import { MarTechService } from '../../services/martech-service';
   selector: 'app-page3-create',
   templateUrl: './page3-create.html',
   styleUrls: ['./page3-create.css'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
 })
 export class Page3Create implements OnInit {
   // Dữ liệu nhập vào Form

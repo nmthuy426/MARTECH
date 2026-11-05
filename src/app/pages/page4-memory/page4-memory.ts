@@ -1,14 +1,14 @@
 import { ConsentPrompt } from '../../components/consent-prompt/consent-prompt';
 import { CampaignAdminStore } from '../../services/campaign-admin-store';
 import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MemoryCardFormData, MemoryThemeId } from '../../models/martech-events.model';
 import { MarTechService } from '../../services/martech-service';
 
 
 @Component({
   selector: 'app-page4-memory',
-  imports:[ConsentPrompt],
+  imports:[ConsentPrompt,RouterLink],
   templateUrl: './page4-memory.html',
   styleUrls: ['./page4-memory.css']
 })

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { MemoryThemeId } from '../../models/martech-events.model';
 import { MarTechService } from '../../services/martech-service';
@@ -26,7 +26,7 @@ interface RecommendedProduct {
   selector: 'app-page5-products',
   templateUrl: './page5-product.html',
   styleUrls: ['./page5-product.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
 })
 export class Page5Product implements OnInit {
   selectedTheme: MemoryThemeId = MemoryThemeId.GACH_LEGO;
