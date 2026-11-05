@@ -42,7 +42,7 @@
           <div class="memory-art relative flex min-h-56 w-full flex-col items-center justify-center overflow-hidden border-b-[3px] border-ink-black p-5 text-center" [class.tone-yellow]="memory.cardTone === 'yellow'" [class.tone-pink]="memory.cardTone === 'pink'" [class.tone-mint]="memory.cardTone === 'mint'" [class.tone-blue]="memory.cardTone === 'blue'">
             <span class="absolute left-3 top-3 border-2 border-ink-black bg-paper-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">THE TOYS WE REMEMBER</span>
             @if (memory.photoUrl) {
-              <img [src]="memory.photoUrl" [alt]="'Ký ức của ' + memory.nickname" class="mt-8 h-32 w-full object-contain">
+              <img [src]="memory.photoUrl" [alt]="'Ký ức của ' + memory.nickname" class="mt-8 h-44 w-full object-cover">
             } @else {
               <span class="toy-emoji mt-5">{{ memory.toyEmoji }}</span>
             }
@@ -91,7 +91,7 @@
       <span class="inline-block border-2 border-ink-black bg-toxic-mint px-2 py-1 text-[10px] font-bold uppercase">{{ memory.themeLabel }}</span>
       <div class="memory-art mt-4 flex min-h-44 flex-col items-center justify-center border-[3px] border-ink-black p-5" [class.tone-yellow]="memory.cardTone === 'yellow'" [class.tone-pink]="memory.cardTone === 'pink'" [class.tone-mint]="memory.cardTone === 'mint'" [class.tone-blue]="memory.cardTone === 'blue'">
         @if (memory.photoUrl) {
-          <img [src]="memory.photoUrl" [alt]="'Ký ức của ' + memory.nickname" class="h-40 w-full object-contain">
+          <img [src]="memory.photoUrl" [alt]="'Ký ức của ' + memory.nickname" class="max-h-64 w-full object-contain">
         } @else {
           <span class="text-7xl">{{ memory.toyEmoji }}</span>
         }
