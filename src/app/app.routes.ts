@@ -1,31 +1,24 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { Page1IntroComponent } from './pages/page1-intro/page1-intro';
 import { Page2Select } from './pages/page2-select/page2-select';
 import { Page3Create } from './pages/page3-create/page3-create';
-
 import { Page5Product } from './pages/page5-product/page5-product';
 
 export const routes: Routes = [
-  { path: 'admin', loadComponent: () => import('./pages/admin/admin').then(m => m.Admin) },
-  // Mặc định khi vào trang chủ -> mở page 1
-  { path: '', redirectTo: 'page1', pathMatch: 'full' },
-
-  // Khai báo đường dẫn tương ứng với từng component
-  { path: 'page1', component: Page1IntroComponent },
-  { path: 'page1-intro', redirectTo: 'page1', pathMatch: 'full' },
-  { path: 'page2', component: Page2Select },
-  { path: 'page3', component: Page3Create },
-  { path: 'page4', loadComponent:()=>import('./pages/page4-memory/page4-memory').then(m=>m.Page4Memory) },
-  { path: 'page5', component: Page5Product },
-
-  { path:'gallery',loadComponent:()=>import('./pages/community-gallery/community-gallery').then(m=>m.CommunityGalleryComponent) },
-  // Trang không tồn tại -> quay về page 1
-  { path: '**', redirectTo: 'page1' }
+ {path:'admin',loadComponent:()=>import('./pages/admin/admin').then(m=>m.Admin)},
+ {path:'',redirectTo:'home',pathMatch:'full'},
+ {path:'home',component:Page1IntroComponent},
+ {path:'choose-memory',component:Page2Select},
+ {path:'create-memory',component:Page3Create},
+ {path:'memory-card',loadComponent:()=>import('./pages/page4-memory/page4-memory').then(m=>m.Page4Memory)},
+ {path:'recommended-toys',component:Page5Product},
+ {path:'gallery',loadComponent:()=>import('./pages/community-gallery/community-gallery').then(m=>m.CommunityGalleryComponent)},
+ // Keep old shared links working.
+ {path:'page1',redirectTo:'home',pathMatch:'full'},
+ {path:'page1-intro',redirectTo:'home',pathMatch:'full'},
+ {path:'page2',redirectTo:'choose-memory',pathMatch:'full'},
+ {path:'page3',redirectTo:'create-memory',pathMatch:'full'},
+ {path:'page4',redirectTo:'memory-card',pathMatch:'full'},
+ {path:'page5',redirectTo:'recommended-toys',pathMatch:'full'},
+ {path:'**',redirectTo:'home'},
 ];
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule { }
-//

@@ -121,3 +121,8 @@ Tư vấn hiện nhập thủ công; gợi ý tối đa ba sản phẩm theo ch�
 Campaign giữ trang Gallery và xuất PNG của nhánh microsite, dùng chung MarTechService/CampaignAdminStore với Admin. Story/card ID được lưu từ bước tạo thẻ; lựa chọn UGC cập nhật đúng bản ghi và vào hàng chờ duyệt. Gallery đọc bài thao tác trực tiếp đã duyệt, có consent, ưu tiên bài nổi bật; không xuất bản bộ mock. Form liên hệ sau thẻ ghi impression ở điểm create khi ít nhất 50% khối xuất hiện và gắn lựa chọn với đúng impression. Không lưu thông tin liên hệ thật.
 
 Các sửa test cũ trên nhánh microsite trước khi gộp được giữ trong Git stash có nhãn “Preserve microsite test fixes before main integration”; bản main vốn có cấu hình test đầy đủ.
+
+
+## URL Campaign
+
+URL chính: `/home`, `/choose-memory`, `/create-memory`, `/memory-card`, `/recommended-toys`. Các đường dẫn `/page1`–`/page5` và `/page1-intro` vẫn chuyển tiếp sang URL mới, giữ query UTM. `/gallery` và `/admin` giữ nguyên. Các liên kết MyKingdom trỏ tới URL `.com.vn` do chủ project cung cấp.

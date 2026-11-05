@@ -5,7 +5,7 @@ import { MarTechService } from './services/martech-service';
 export class App {
  protected readonly title = signal('toys_we_remember_micorsite');
  readonly isDemo = signal(false);
- readonly campaignPath = signal(sessionStorage.getItem('ttwr.campaign_path') || '/page1');
+ readonly campaignPath = signal(sessionStorage.getItem('ttwr.campaign_path') || '/home');
  private readonly tracking = inject(MarTechService);
  constructor() {
   inject(Router).events.subscribe(event=>{

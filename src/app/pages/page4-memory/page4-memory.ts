@@ -282,6 +282,6 @@ goToPage5(): void {
   });
 
   // 2. Chuyển sang Trang 5
-  this.router.navigate(['/page5']);
+  this.router.navigate(['/recommended-toys']);
 }
 }

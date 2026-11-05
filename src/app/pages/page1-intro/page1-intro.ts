@@ -24,7 +24,7 @@ export class Page1IntroComponent implements AfterViewInit {
   startJourney(): void {
     this.tracking.trackEvent('journey_start_click');
     this.playRetroBeep(880, 'square', 0.15);
-    this.router.navigate(['/page2']);
+    this.router.navigate(['/choose-memory']);
   }
 
   private initEventListeners(): void {

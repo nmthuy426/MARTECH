@@ -67,7 +67,7 @@ export class MarTechService {
         } else localStorage.setItem('ttwr.first_visit', new Date().toISOString());
       }
     }
-    if (path === '/page1' || path === '/') this.trackEvent('landing_page_view');
+    if (path === '/home' || path === '/page1' || path === '/') this.trackEvent('landing_page_view');
   }
 
   trackEvent(eventName: string, customData: Record<string, unknown> = {}): TrackedEvent {

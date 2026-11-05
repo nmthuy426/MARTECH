@@ -46,6 +46,6 @@ export class Page2Select implements OnInit {
       theme_id: this.currentSelectedId,
     });
 
-    this.router.navigate(['/page3']);
+    this.router.navigate(['/create-memory']);
   }
 }

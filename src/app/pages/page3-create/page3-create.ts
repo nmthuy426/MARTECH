@@ -170,7 +170,7 @@ onSubmit(): void {
 
       setTimeout(() => {
         this.isProcessing = false;
-        this.router.navigate(['/page4']);
+        this.router.navigate(['/memory-card']);
       }, 300);
     }
   }, 200);

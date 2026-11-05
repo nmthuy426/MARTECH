@@ -1,7 +1,7 @@
 <header class="fixed top-0 left-0 z-50 w-full border-b-[3px] border-ink-black bg-retro-cream">
   <div class="mx-auto flex h-20 max-w-7xl items-center justify-between gap-3 px-4 md:px-10">
-    <a routerLink="/page1" class="inline-block rotate-[-1deg] border-2 border-ink-black bg-canary-yellow px-3 py-2 text-xs font-bold uppercase tracking-wider text-ink-black shadow-[3px_3px_0_#111]">★ THE TOYS WE REMEMBER ★</a>
-    <a href="https://MyKingdom.com" target="_blank" rel="noopener noreferrer" class="border-[2px] border-ink-black bg-toxic-mint px-3 py-2 text-xs font-bold uppercase text-ink-black shadow-[3px_3px_0_#111] hover:bg-canary-yellow">MYKINGDOM.COM ↗</a>
+    <a routerLink="/home" class="inline-block rotate-[-1deg] border-2 border-ink-black bg-canary-yellow px-3 py-2 text-xs font-bold uppercase tracking-wider text-ink-black shadow-[3px_3px_0_#111]">★ THE TOYS WE REMEMBER ★</a>
+    <a href="https://www.mykingdom.com.vn/?srsltid=AYCX9vIEwy8pHE2MYwLud9Rexsy3H4nvT9Pwu2Wh4mTMqGAm3mTys6Vd" target="_blank" rel="noopener noreferrer" class="border-[2px] border-ink-black bg-toxic-mint px-3 py-2 text-xs font-bold uppercase text-ink-black shadow-[3px_3px_0_#111] hover:bg-canary-yellow">MYKINGDOM.COM ↗</a>
   </div>
 </header>
 
@@ -14,7 +14,7 @@
           <h1 class="max-w-4xl text-4xl font-bold uppercase leading-[1.05] tracking-tight md:text-6xl">Mỗi món đồ chơi,<br><span class="text-electric-red">một câu chuyện</span></h1>
           <p class="mt-4 max-w-2xl text-base font-medium leading-relaxed md:text-lg">Ghé thăm những mảnh ký ức tuổi thơ được lưu lại qua lời kể và những tấm thẻ Memory Card.</p>
         </div>
-        <a routerLink="/page2" class="inline-flex items-center justify-center gap-3 border-[3px] border-ink-black bg-canary-yellow px-5 py-3 font-bold uppercase shadow-[5px_5px_0_#111] transition hover:-translate-y-1 hover:shadow-[7px_7px_0_#111]">KỂ KÝ ỨC CỦA BẠN <span class="text-xl">➜</span></a>
+        <a routerLink="/choose-memory" class="inline-flex items-center justify-center gap-3 border-[3px] border-ink-black bg-canary-yellow px-5 py-3 font-bold uppercase shadow-[5px_5px_0_#111] transition hover:-translate-y-1 hover:shadow-[7px_7px_0_#111]">KỂ KÝ ỨC CỦA BẠN <span class="text-xl">➜</span></a>
       </div>
     </div>
 
@@ -56,14 +56,14 @@
       <span class="text-4xl">🧸 🪁 🎲</span>
       <h2 class="text-2xl font-bold uppercase md:text-3xl">Ký ức của bạn cũng xứng đáng được lưu giữ</h2>
       <p class="max-w-xl text-sm font-medium">Chọn món đồ chơi bạn từng yêu thích và kể lại câu chuyện của riêng mình.</p>
-      <a routerLink="/page2" class="border-[3px] border-ink-black bg-paper-white px-5 py-3 text-sm font-bold uppercase shadow-[4px_4px_0_#111] transition hover:-translate-y-1">TẠO MEMORY CARD NGAY →</a>
+      <a routerLink="/choose-memory" class="border-[3px] border-ink-black bg-paper-white px-5 py-3 text-sm font-bold uppercase shadow-[4px_4px_0_#111] transition hover:-translate-y-1">TẠO MEMORY CARD NGAY →</a>
     </div>
   </section>
 </main>
 
 <footer class="border-t-[3px] border-ink-black bg-warm-eggshell px-4 py-6 text-center text-xs font-medium text-on-surface-variant">
   © 2024 The Toys We Remember x MyKingdom · Đồng hành lưu giữ kỷ niệm tuổi thơ.
-  <a routerLink="/page1" class="ml-2 font-bold text-ink-black underline">Về trang chủ</a>
+  <a routerLink="/home" class="ml-2 font-bold text-ink-black underline">Về trang chủ</a>
 </footer>
 
 @if (selectedMemory; as memory) {

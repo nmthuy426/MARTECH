@@ -16,7 +16,7 @@ describe('Admin connected to customer events',()=>{
   const tracking=TestBed.inject(MarTechService);
   fixture.detectChanges();
   expect(fixture.nativeElement.textContent).toContain('Đang chờ câu chuyện đầu tiên');
-  tracking.enterCustomerPage('/page1');
+  tracking.enterCustomerPage('/home');
   tracking.trackEvent('story_submit_success');
   tracking.trackEvent('memory_card_create_success');
   fixture.detectChanges();
