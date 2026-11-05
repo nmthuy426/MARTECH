@@ -8,8 +8,8 @@ import { RecipientForm } from '../recipient-form/recipient-form';
 <dialog #invite class="gift-modal" aria-labelledby="gift-invite-title" (cancel)="$event.preventDefault();closed.emit()">
   <button class="gift-close" type="button" aria-label="Đóng gợi ý quà" (click)="closed.emit()">×</button>
   <div class="gift-modal-body"><span class="gift-sticker">MỘT KÝ ỨC MỚI BẮT ĐẦU</span>
-  <h2 id="gift-invite-title">Mang niềm vui này đến cho ai?</h2>
-  <p>Bạn có muốn tìm một món đồ chơi để tạo thêm ký ức mới không?</p>
+  <h2 id="gift-invite-title">Bạn có muốn tìm một món đồ chơi để tạo thêm ký ức mới không?</h2>
+  <p class="gift-question-subtitle">Mang niềm vui này đến cho ai?</p>
   <div class="gift-kind-options">
    <button type="button" [class.active]="recipient.kind==='self'" (click)="choose('self')">✦ Cho bản thân</button>
    <button type="button" [class.active]="recipient.kind==='child'" (click)="choose('child')">♡ Chơi cùng con</button>

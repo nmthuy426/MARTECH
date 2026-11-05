@@ -59,3 +59,5 @@
 .gift-modal::backdrop{background:#111b}.gift-modal{margin:auto}.gift-modal[open]{display:block}
 
 .gift-modal[open]{display:flex;flex-direction:column;overflow:hidden}.gift-modal-body{overflow:auto;min-height:0;padding-right:4px}.gift-modal .gift-actions{flex-shrink:0;border-top:2px solid #111;padding-top:16px;margin-bottom:0}.gift-modal .gift-close{z-index:1}
+
+.gift-question-subtitle{font-size:16px;font-weight:600;margin:8px 0 18px}.gift-modal #gift-invite-title{text-wrap:balance;line-height:1.25}
