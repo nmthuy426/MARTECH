@@ -20,11 +20,14 @@ describe('Page2Select', () => {
     await fixture.whenStable();
   });
 
-  it('continues immediately with the clicked theme and records each event once', () => {
+  it('selects without navigating and continues only when requested', () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
     const track = vi.spyOn(TestBed.inject(MarTechService), 'trackEvent');
     fixture.nativeElement.querySelector('[data-theme-id="outdoor-kite"]').click();
     expect(sessionStorage.getItem('theme_id')).toBe(MemoryThemeId.CANH_DIEU);
+    expect(navigate).not.toHaveBeenCalled();
+    expect(track.mock.calls.filter(c => c[0] === 'story_form_open')).toHaveLength(0);
+    component.goToPage3();
     expect(navigate).toHaveBeenCalledWith(['/create-memory']);
     expect(track.mock.calls.filter(c => c[0] === 'memory_theme_select')).toHaveLength(1);
     expect(track.mock.calls.filter(c => c[0] === 'story_form_open')).toHaveLength(1);
