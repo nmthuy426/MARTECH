@@ -4,6 +4,33 @@
 > Đây là brief giao việc, không phải thông báo hai task bên dưới đã hoàn thành.
 > Đọc code hiện tại trước khi thay đổi. Chỉ làm hai task trong tài liệu này, giữ nguyên các luồng khác.
 
+## 0. Bắt đầu — pull main rồi đọc context
+
+**Quy trình mới theo chủ repo: làm và push trực tiếp trên `main`, không cần branch phụ hoặc PR. Quy trình này thay thế yêu cầu branch cá nhân trong bản bàn giao cũ.**
+
+Trước khi sửa code, mở đúng repo, kiểm tra thay đổi có sẵn rồi lấy bản `main` mới nhất:
+
+```bash
+git status
+git switch main
+git pull --ff-only origin main
+```
+
+Nếu chưa có repo trên máy, clone trước rồi vào thư mục repo và chạy các bước trên. Nếu có thay đổi chưa lưu hoặc pull báo lịch sử phân kỳ, kiểm tra và xử lý công việc/conflict hiện có; không dùng reset --hard, xóa file hay force-push để bỏ qua.
+
+Đọc theo thứ tự sau, rồi mới bắt đầu hai task:
+
+1. `BACKEND-HANDOFF.md`: toàn bộ phạm vi, nghiệm thu, quy tắc dữ liệu và quy trình Git mới.
+2. `README.md`, `package.json`, `angular.json`: cách chạy, dependency, build và cấu trúc project.
+3. `GIFT-FLOW-README.md`, `ADMIN-README.md`: luồng Campaign, người nhận quà và vận hành Admin; đối chiếu code nếu mô tả cũ khác hiện trạng.
+4. `src/app/app.routes.ts`, `src/app/pages/admin/admin.ts`, `admin.html`, `admin.css`: route, danh sách tab, deep link và bố cục cần tinh gọn.
+5. `src/app/services/admin-data-source.ts`, `campaign-admin-store.ts`, `martech-service.ts`, `dashboard-analytics.ts`: nguồn mock/live, adapter, story, consent, event và cách tính KPI.
+6. `src/app/pages/community-gallery/`, `src/app/pages/admin/livestream/`, `public/mock/mykingdom_campaign_mock_400.json`: corpus Gallery, phần phân tích hiện có và dữ liệu để triển khai insight mới.
+7. `src/app/pages/admin/operations/`, `src/app/pages/admin/family/`, `src/app/services/family-crm.ts`, `gift-shop.ts`: các chức năng cần giữ khi gom tab và liên kết hồ sơ/đơn.
+8. Các file `*.spec.ts` nằm cạnh những phần sẽ sửa; đọc generator/validator trong mục 3 nếu cần đổi schema.
+
+Sau đó chạy project, mở Campaign và Admin hiện tại để hiểu hành vi thực tế. Không chỉ dựa vào brief để viết lại từ đầu.
+
 ## 1. Mục tiêu bàn giao
 
 1. Phân tích nội dung Memory Card trong Gallery để tìm insight riêng cho campaign **The Toys We Remember**. Đặt thành tab con bên trong nhóm phân tích, cạnh phần phân tích bình luận hiện có.
@@ -151,7 +178,7 @@ Nút/chỉ số ở Tổng quan nên dẫn đến đúng phần chi tiết, thay
 
 Giữ query param/deep link cũ như `?tab=livestream`, `customers`, `families`, `consultation`, `stories`, `community`, `automation`, `orders`, `consent`, `settings`, `overview`: ánh xạ sang đúng nhóm/tab con hoặc redirect tương thích. Reload, nút back/forward của browser và chuyển nguồn dữ liệu không được đưa người dùng về nhầm phần. Giữ bộ lọc khi phù hợp; bộ lọc riêng của một loại dữ liệu không được âm thầm áp vào loại khác.
 
-Nghiệm thu: sidebar chỉ còn khoảng 5–6 nhóm; tính năng cũ vẫn truy cập được; tìm kiếm, lọc, phân trang, popup, đổi mock/live, thao tác duyệt và liên kết hồ sơ/đơn vẫn hoạt động. Kiểm tra cả bố cục desktop và mobile, có ảnh trước/sau và bảng ánh xạ tab cũ → nhóm mới trong PR.
+Nghiệm thu: sidebar chỉ còn khoảng 5–6 nhóm; tính năng cũ vẫn truy cập được; tìm kiếm, lọc, phân trang, popup, đổi mock/live, thao tác duyệt và liên kết hồ sơ/đơn vẫn hoạt động. Kiểm tra cả bố cục desktop và mobile, có ảnh trước/sau và bảng ánh xạ tab cũ → nhóm mới trong phần bàn giao.
 
 ## 6. Quy tắc bắt buộc giữ nguyên
 
@@ -180,21 +207,9 @@ Không cần sinh lại mock nếu chỉ đọc/phân tích hoặc đổi menu. 
 
 Ngoài tests, mở giao diện thật để kiểm tra hai task và các luồng liên quan. Nếu có backend mới, bổ sung hướng dẫn chạy, `.env.example` không có secret, API contract, kiểm tra lỗi và cách frontend truy cập endpoint trên local/Vercel. Frontend build được chưa đồng nghĩa backend đã deploy hoặc kết nối thành công.
 
-## 8. Git — branch và danh tính của teammate
+## 8. Git — cập nhật trực tiếp main và danh tính của teammate
 
-**Mỗi teammate làm trên branch mang tên của chính mình; chỉ push branch đó. Không push trực tiếp main, không force-push, không tự merge PR.** Nếu branch tên mình đã tồn tại, kiểm tra rồi tiếp tục đúng branch đó; không tạo lại hoặc ghi đè lịch sử.
-
-Ví dụ `ten-ban` bên dưới phải thay bằng tên branch thật của teammate, viết không dấu, không khoảng trắng:
-
-```bash
-# Trước hết kiểm tra có thay đổi chưa lưu không. Không ghi đè công việc có sẵn.
-git status
-
-git fetch origin
-git switch -c ten-ban origin/main
-```
-
-Nếu branch đã có trên remote, dùng `git switch --track origin/ten-ban` (khi chưa có local) hoặc `git switch ten-ban` (khi đã có local), rồi cập nhật theo lịch sử thực tế. Không chạy mù quáng các lệnh tạo branch khi nó đã tồn tại.
+**Làm trên `main` và push `origin main` sau mỗi đợt thay đổi đã kiểm tra để Vercel cập nhật website chính. Không dùng branch phụ, không yêu cầu mở PR.** Trước mỗi đợt làm tiếp theo, kiểm tra trạng thái và pull main mới nhất như mục 0, tránh sửa trên bản code cũ.
 
 **Commit phải đứng tên chính teammate và push bằng tài khoản GitHub của chính teammate.** Kiểm tra `git config --get user.name`, `git config --get user.email` và tài khoản GitHub đang dùng. Nếu chưa đúng, teammate xác nhận tên và email GitHub của mình rồi cấu hình cho repo:
 
@@ -215,15 +230,24 @@ git add path/to/file-1 path/to/file-2
 git commit -m "Add campaign story insights and simplify admin navigation"
 # Thay COMMIT_HASH bằng commit vừa tạo để kiểm tra author/committer và message.
 git show --format=fuller --no-patch COMMIT_HASH
-git push -u origin ten-ban
+git push origin main
 ```
 
-Sau đó mở PR từ branch của mình vào `main`, ghi rõ hai task, thay đổi, test, ảnh giao diện và giới hạn còn lại. Chỉ báo “đã lên website chính” khi main được duyệt/merge và Vercel deploy thành công; push branch cá nhân mới chỉ là code của branch/preview.
+Trước khi push, kiểm tra đang ở `main` và chạy build/tests phù hợp. Không push bản đang lỗi để thử trực tiếp trên website. Nếu push bị từ chối vì main có commit mới, fetch và đồng bộ commit mới (rebase/giải quyết conflict phù hợp), kiểm tra lại rồi push bình thường; không force-push.
+
+Sau mỗi lần push main:
+
+1. Kiểm tra deployment Vercel của commit vừa push đã thành công.
+2. Mở https://the-toys-we-remember.vercel.app/ và phần Admin vừa sửa, tải lại trang để xem thay đổi thực tế.
+3. Kiểm tra tính năng vừa làm cùng các luồng liên quan. Nếu deploy lỗi hoặc giao diện chưa đúng, sửa và kiểm tra lại trước khi báo hoàn thành.
+4. Gửi mã commit, nội dung thay đổi và ảnh kiểm tra cho chủ repo. Không coi push thành công là bằng chứng website/backend đã chạy đúng.
+
+Nếu backend mới cần cấu hình hoặc deploy riêng, nêu rõ và kiểm tra đường gọi API trên Vercel; push frontend lên main không tự làm backend hoạt động.
 
 ## 9. Bàn giao lại cho chủ repo
 
-Gửi link branch/PR, hướng dẫn chạy backend nếu có, cấu hình cần thiết không kèm secret, ảnh tab insight Gallery và menu đã tinh gọn. Nêu rõ nguồn dữ liệu/corpus, AI thật hay fallback, kết quả tests/build, bảng ánh xạ tab cũ → mới, lỗi/giới hạn còn lại và cách kiểm tra trên UI. Không chỉ gửi code hoặc ảnh mà thiếu cách chạy.
+Gửi link commit trên main và website/deployment đã kiểm tra, hướng dẫn chạy backend nếu có, cấu hình cần thiết không kèm secret, ảnh tab insight Gallery và menu đã tinh gọn. Nêu rõ nguồn dữ liệu/corpus, AI thật hay fallback, kết quả tests/build, bảng ánh xạ tab cũ → mới, lỗi/giới hạn còn lại và cách kiểm tra trên UI. Không chỉ gửi code hoặc ảnh mà thiếu cách chạy.
 
 ## 10. Prompt ngắn có thể đưa cho AI của teammate
 
-> Đọc toàn bộ `BACKEND-HANDOFF.md`, `GIFT-FLOW-README.md` và các file code được chỉ ra trước khi sửa. Triển khai đúng hai task: insight từ Gallery và tinh gọn điều hướng Admin; giữ nguyên các quy tắc dữ liệu/consent/phễu. Đọc trạng thái Git trước, làm trên branch tên tôi, không push main hoặc tự merge. Commit/push bằng danh tính Git đã được tôi xác nhận, không kèm co-author/chữ ký AI. Nếu chưa biết tên branch hoặc danh tính của tôi thì hỏi, không tự đoán. Sau khi làm, chạy kiểm tra, mở UI xác nhận và bàn giao theo mục 9. Không tự mở rộng sang hệ thống thanh toán, dự báo mua/rời bỏ hoặc gửi tin thật.
+> Trước khi làm, kiểm tra trạng thái Git, chuyển sang main và pull origin/main mới nhất theo mục 0; không ghi đè công việc có sẵn. Đọc các file đúng thứ tự ở mục 0 và đối chiếu giao diện hiện tại rồi mới sửa. Triển khai hai task: insight từ Gallery và tinh gọn điều hướng Admin; giữ nguyên quy tắc dữ liệu/consent/phễu. Làm trực tiếp trên main, không tạo branch phụ hoặc PR. Sau mỗi đợt thay đổi đã qua build/tests phù hợp, commit và push origin main để Vercel cập nhật, rồi mở website kiểm tra thực tế. Không force-push. Commit/push bằng danh tính Git của tôi đã được xác nhận, không kèm co-author/chữ ký AI; nếu chưa biết danh tính thì hỏi, không tự đoán. Bàn giao theo mục 9. Không tự mở rộng sang thanh toán thật, dự báo mua/rời bỏ hoặc gửi tin thật.
