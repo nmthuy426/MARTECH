@@ -276,6 +276,8 @@ def generate():
     first_story=max(data['stories'],key=lambda story:story['created_at'])
     first_story['photo_url']='/mock/images/story076-quan-ca-con.png'
     from generate_crm_mock import generate_crm
+    from personalize_campaign_mock import personalize
+    personalize(data)
     data['crm']=generate_crm(data)
     return data
 
